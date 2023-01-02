@@ -9,10 +9,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 # use option_menu instead of steamlit mutli page
-def clean():
-    # remove all files in tmp folder
-    for file in os.listdir("storage/tmp"):
-        os.remove(os.path.join("storage/tmp", file))
+
 
 hide_streamlit_style = """
                 <style>
@@ -58,14 +55,3 @@ with st.sidebar:
     # create a multi-page app the apps are in the apps folder
 if selected == "Zählung":
     cbc()
-    clean()
-
-
-
-
-
-
-
-
-
-
