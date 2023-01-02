@@ -58,7 +58,10 @@ with st.sidebar:
     # create a multi-page app the apps are in the apps folder
 if selected == "Zählung":
     cbc()
-    clean()
+    try:
+        clean()
+    except:
+        pass
 
 
 
