@@ -49,7 +49,7 @@ with st.sidebar:
                            styles={
                                "icon": {"color": "#ffffff", "font-size": "20px"},
                                "nav-link-selected": {"background-color": "#3d3b40"},
-                               "nav-link": {"font-size": "20px", "color": "#ffffff"},
+                               "nav-link": {"font-size": "18px", "color": "#ffffff"},
                            })
 
     # create a multi-page app the apps are in the apps folder
