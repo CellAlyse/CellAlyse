@@ -1,16 +1,19 @@
-
+import glob
+import os
+import altair as alt
 import cv2
 import numpy as np
-
-
+import json
 import streamlit as st
 import pyhdust.images as phim
 from scipy.spatial import ConvexHull
 import joblib
 from skimage import filters as fl
+import pandas as pd
+from matplotlib import pyplot as plt
+import seaborn as sn
 
 
-@st.experimental_singleton
 def segmentation(img):
     """
     :param img: input rgb Bild
@@ -112,15 +115,10 @@ def segmentation(img):
 
     return Nucleus_img, img_convex, img_ROC
 
-
 def feature_extractor(img, min_area=100):
-    """
-    :param img: input rgb bild
-    :param min_area: minimale Fläche der Weißen Blutzelle. Wird benutzt um Plätchen Segmentierung zu umgehen
-    :return: binäres Bild vom Nukleus, binäres Bild der Konvexen Hülle, binäres Bild vom Rest vom Zytoplasma(ROC)
-    """
-    Ftr_List = []
 
+    Ftr_List = []
+    #org_img = cv2.resize(img, dsize=(height, width))
     org_img = img.copy()
     img[:, :, 0] = org_img[:, :, 0].copy()
     img[:, :, 1] = org_img[:, :, 1].copy()
@@ -149,6 +147,8 @@ def feature_extractor(img, min_area=100):
     balance_img[:, :, 1] = G_.copy()
     balance_img[:, :, 2] = B_.copy()
 
+    # >>>>>> 8 ms <<<<<<
+
     # balance_img = org_img.copy()
     cmyk = phim.rgb2cmyk(balance_img)
     _M = cmyk[:, :, 1]
@@ -162,8 +162,10 @@ def feature_extractor(img, min_area=100):
 
     b_temp = np.where(min_MS < KM, min_MS, KM)
     min_MS_KM = min_MS - b_temp
-    min_MS_KM = cv2.GaussianBlur(min_MS_KM, ksize=(5, 5), sigmaX=0)
 
+#    cv2.imshow('Step 1' , cv2.resize(Nucleus_img , (256 ,256)))
+
+    min_MS_KM = cv2.GaussianBlur(min_MS_KM, ksize=(5, 5), sigmaX=0)
     try:
         thresh2 = fl.threshold_multiotsu(min_MS_KM, 2)
         Nucleus_img = np.zeros_like(min_MS_KM)
@@ -189,10 +191,10 @@ def feature_extractor(img, min_area=100):
     for cnt in contours:
         _perimeter += cv2.arcLength(cnt, True)
 
-    temp_points = np.argwhere(Nucleus_img == 255)
+    temp_points = np.argwhere(Nucleus_img==255)
     Ncl_points = np.zeros_like(temp_points)
-    Ncl_points[:, 0] = temp_points[:, 1]
-    Ncl_points[:, 1] = temp_points[:, 0]
+    Ncl_points[:,0] = temp_points[:,1]
+    Ncl_points[:,1] = temp_points[:,0]
     _area = np.sum(Nucleus_img)
 
     cvx_hull = ConvexHull(Ncl_points)
@@ -216,12 +218,12 @@ def feature_extractor(img, min_area=100):
 
     flag_empty = len(contours) > 0
     if not flag_empty:
-        Error = '[Error 1]: Kein Umriss gefunden'
+        Error = '[Error 1]: No contours are detected'
         print(Error)
         return False, Error, None
 
     if max_area <= min_area:
-        Error = f'[ERROR 2]:Max area kleiner als min area {min_area}'
+        Error = '[ERROR 2]: max area of nucleus is lower than %d'%(min_area)
         print(Error)
         return False, Error, None
 
@@ -231,36 +233,34 @@ def feature_extractor(img, min_area=100):
     Shape_Features = np.array([Circularity, Convexity, Solidity])
     Ftr_List.extend([Circularity, Convexity, Solidity])
     if np.sum(img_convex - Nucleus_img) == 0:
-        print('Convex Bild == Nukeus Bild')
-        temp = [1] * 72
+        print('******* Convex image == nucleus_image ********')
+        temp = [1]*72
         temp.extend(Ftr_List)
         return True, None, np.array(temp)
-
+    # >>>>>> NEW CODES <<<<<<<<<
     ALL_Channels = []
-    ALL_Channels.append(balance_img[:, :, 0])  # channel R : index 0
-    ALL_Channels.append(balance_img[:, :, 1])  # channel G : index 1
-    ALL_Channels.append(balance_img[:, :, 2])  # channel B : index 2
+    ALL_Channels.append(balance_img[:, :, 0]) # channel R : index 0
+    ALL_Channels.append(balance_img[:, :, 1]) # channel G : index 1
+    ALL_Channels.append(balance_img[:, :, 2]) # channel B : index 2
 
     HSV = cv2.cvtColor(balance_img, cv2.COLOR_RGB2HSV)
-    ALL_Channels.append(HSV[:, :, 0])  # channel H : index 3
-    ALL_Channels.append(HSV[:, :, 1])  # channel S : index 4
-    ALL_Channels.append(HSV[:, :, 2])  # channel V : index 5
+    ALL_Channels.append(HSV[:, :, 0]) # channel H : index 3
+    ALL_Channels.append(HSV[:, :, 1]) # channel S : index 4
+    ALL_Channels.append(HSV[:, :, 2]) # channel V : index 5
 
     LAB = cv2.cvtColor(balance_img, cv2.COLOR_RGB2LAB)
-    ALL_Channels.append(LAB[:, :, 0])  # channel L : index 6
-    ALL_Channels.append(LAB[:, :, 1])  # channel A : index 7
-    ALL_Channels.append(LAB[:, :, 2])  # channel BB : index 8
+    ALL_Channels.append(LAB[:, :, 0]) # channel L : index 6
+    ALL_Channels.append(LAB[:, :, 1]) # channel A : index 7
+    ALL_Channels.append(LAB[:, :, 2]) # channel BB : index 8
 
     YCrCb = cv2.cvtColor(balance_img, cv2.COLOR_RGB2YCrCb)
-    ALL_Channels.append(YCrCb[:, :, 0])  # channel Y : index 9
-    ALL_Channels.append(YCrCb[:, :, 1])  # channel Cr : index 10
-    ALL_Channels.append(YCrCb[:, :, 2])  # channel Cb : index 11
+    ALL_Channels.append(YCrCb[:, :, 0]) # channel Y : index 9
+    ALL_Channels.append(YCrCb[:, :, 1]) # channel Cr : index 10
+    ALL_Channels.append(YCrCb[:, :, 2]) # channel Cb : index 11
 
-    NCL_pxls_value = np.zeros(shape=(len(ALL_Channels), Ncl_points.shape[0]),
-                              dtype=np.uint8)  # intensitität vom  Nukleus
-    CVX_pxls_Value = np.zeros(shape=(len(ALL_Channels), CVX_points.shape[0]),
-                              dtype=np.uint8)  # intensitität vom  Konvex
-    ROC_pxls_Value = np.zeros(shape=(len(ALL_Channels), ROC_points.shape[0]), dtype=np.uint8)  # intensitität vom  ROC
+    NCL_pxls_value = np.zeros(shape=(len(ALL_Channels), Ncl_points.shape[0]), dtype=np.uint8)
+    CVX_pxls_Value = np.zeros(shape=(len(ALL_Channels), CVX_points.shape[0]), dtype=np.uint8)
+    ROC_pxls_Value = np.zeros(shape=(len(ALL_Channels), ROC_points.shape[0]), dtype=np.uint8)
 
     for ch in range(len(ALL_Channels)):
         p_roc, p_ncl = 0, 0
@@ -275,24 +275,21 @@ def feature_extractor(img, min_area=100):
                 ROC_pxls_Value[ch, p_roc] = ALL_Channels[ch][row, col]
                 p_roc += 1
 
-    # durch und std für alle channels
     Ncl_mean_std = np.zeros(shape=(len(ALL_Channels), 2), dtype=np.float)
     Ncl_mean_std[:, 0] = np.mean(NCL_pxls_value, axis=1)
     Ncl_mean_std[:, 1] = np.std(NCL_pxls_value, axis=1)
 
-    # durch und std für Konvex
     Cvx_mean_std = np.zeros(shape=(len(ALL_Channels), 2), dtype=np.float)
     Cvx_mean_std[:, 0] = np.mean(CVX_pxls_Value, axis=1)
     Cvx_mean_std[:, 1] = np.std(CVX_pxls_Value, axis=1)
 
-    # durch und std für ROC
     Roc_mean_std = np.zeros(shape=(len(ALL_Channels), 2), dtype=np.float)
     Roc_mean_std[:, 0] = np.mean(ROC_pxls_Value, axis=1)
     Roc_mean_std[:, 1] = np.std(ROC_pxls_Value, axis=1)
 
-    Ratio_Ncl2Cvx = np.reshape(np.divide(Ncl_mean_std, Cvx_mean_std), newshape=(len(ALL_Channels) * 2,))
-    Ratio_Roc2Cvx = np.reshape(np.divide(Roc_mean_std, Cvx_mean_std), newshape=(len(ALL_Channels) * 2,))
-    Ratio_Roc2Ncl = np.reshape(np.divide(Roc_mean_std, Ncl_mean_std), newshape=(len(ALL_Channels) * 2,))
+    Ratio_Ncl2Cvx = np.reshape(np.divide(Ncl_mean_std, Cvx_mean_std), newshape=(len(ALL_Channels)*2,))
+    Ratio_Roc2Cvx = np.reshape(np.divide(Roc_mean_std, Cvx_mean_std), newshape=(len(ALL_Channels)*2,))
+    Ratio_Roc2Ncl = np.reshape(np.divide(Roc_mean_std, Ncl_mean_std), newshape=(len(ALL_Channels)*2,))
     Color_Features = np.concatenate((Ratio_Ncl2Cvx, Ratio_Roc2Cvx))
     Color_Features = np.nan_to_num(Color_Features, nan=0, posinf=1)
     ALL_Features = np.concatenate((Color_Features, Shape_Features))
@@ -316,13 +313,13 @@ def predict_svm(image, model='Raabin', x_train='Raabin'):
     else:
         return error
 
-
 @st.experimental_memo
 def load_model(model_path, x_train):
     model = joblib.load(model_path)
     x_train = np.load(x_train)
 
     return model, x_train
+
 
 def large_image(image, model_name):
     nuclei, _, _ = segmentation(image)
@@ -373,7 +370,7 @@ def large_image(image, model_name):
         col2.write(f'Blutzelle: {read(predict_svm(window, model_name))}')
 
 
-
+@st.experimental_memo
 def read(prediction):
     switcher = {
         1: "Neutrophil",
@@ -383,3 +380,94 @@ def read(prediction):
         5: "Basophil"
     }
     return switcher.get(prediction, "Invalid")
+
+@st.experimental_memo
+def get_names(i):
+    if i == 1:
+        return "Neutrophil"
+    elif i == 2:
+        return "Lymphozyt"
+    elif i == 3:
+        return "Monozyt"
+    elif i == 4:
+        return "Eosinophil"
+    elif i == 5:
+        return "Basophil"
+    else:
+        return "Invalid"
+
+def folder_predict(img_path, model='data/Raabin.pkl', x_train_path='images/svm/x_train.npy', up=False):
+    model = joblib.load(f"storage/models/svm/{model}.pkl")
+    if up == False:
+        img = cv2.imread(img_path)
+    else:
+        img = img_path
+    x_train = np.load(f"storage/models/svm/{x_train_path}_train.npy")
+
+    ncl_detect, error, ftrs = feature_extractor(img=img, min_area=100)
+    if ncl_detect:
+        ftrs = np.array(ftrs).reshape(1, -1)
+        # normalize feature using max-min way
+        mn, mx = x_train.min(axis=0), x_train.max(axis=0)
+        ftrs = (ftrs - mn)/(mx - mn)
+        pred = model.predict(ftrs)
+        return pred[0]
+    else:
+        return error
+
+def dataset_prediction(name, model_name):
+    predictions = []
+    st.write(f'Prediction of {model_name}')
+    if name == "BCCD":
+        length = len(os.listdir('storage/BCCD/'))
+        my_bar = st.progress(0)
+        i = 0
+        for img in glob.glob(f"storage/{name}/*.jpeg"):
+            i += 1
+            my_bar.progress(i/length)
+            predictions.append(folder_predict(img, model_name, model_name, False))
+
+    my_bar.empty()
+
+    with open(f"storage/{name}/Test.json") as json_file:
+        data = json.load(json_file)
+
+    ground_truth = []
+    for key, value in data.items():
+        ground_truth.append(value)
+
+    unique_values = list(set(predictions))
+
+    counts = []
+    for i in unique_values:
+        counts.append(predictions.count(i))
+
+    gt_counts = []
+    for i in unique_values:
+        gt_counts.append(ground_truth.count(i))
+
+    names = []
+    for i in unique_values:
+        names.append(get_names(i))
+
+    gt_names = []
+    for i in unique_values:
+        gt_names.append(get_names(i))
+
+
+    df = pd.DataFrame({"names": names, "counts": counts, "ground_trurt": gt_counts})
+    colors=["#a9dc76", "#ff6188", "#fc9867", "#78dce8"]
+    chart = alt.Chart(df).mark_bar().encode(
+        x=alt.X('names', axis=alt.Axis(labelAngle=0), title="Blutzellen", sort=None),
+        y=alt.Y('counts', title="Anzahl"),
+        color=alt.Color('names', scale=alt.Scale(range=colors)),
+        tooltip=['names', 'counts']
+    ).properties(
+        width=alt.Step(80)  # controls width of bar.
+    )
+    st.altair_chart(chart, use_container_width=True)
+
+    st.markdown('---')
+    # create a dataframe with the ground truth and the predictions
+    df = pd.DataFrame({"Blutzelle": names, "KI": counts, "Arzt": gt_counts})
+    st.write(df)
