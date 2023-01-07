@@ -1,7 +1,7 @@
 streamlit
 requests
 numpy
-tensorflow
+tensorflow==2.9
 tensorflow_addons
 matplotlib
 scikit-image
