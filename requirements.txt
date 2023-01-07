@@ -14,3 +14,4 @@ protobuf==3.20
 pyhdust==1.3.26
 scikit-learn
 altair
+seaborn
