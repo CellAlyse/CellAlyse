@@ -8,12 +8,12 @@ output_directory = "storage/tmp"
 def wbc():
     global custom
     option_wbc = st.sidebar.radio("Optionen", ("Segmentieren", "Erkennen"))
-
+    auto = False
     if option_wbc == "Erkennen":
         st.sidebar.markdown("___")
         model_name = st.sidebar.radio("Modell auswählen", ("Raabin", "LISC", "BCCD"), index=0)
+        auto = st.sidebar.checkbox("Automatische Bearbeitung", value=False)
         st.sidebar.markdown("___")
-
     upload = st.sidebar.selectbox("Upload oder Testbild?", ("Testbild", "Upload"))
 
     if upload == "Testbild":
@@ -35,7 +35,7 @@ def wbc():
             segment_image(image, custom)
 
         else:
-            predict_image(image, model_name, custom)
+            predict_image(image, model_name, custom, auto)
 
 
 def segment_image(img, upload):
@@ -50,16 +50,20 @@ def segment_image(img, upload):
     st.image(nucleus, use_column_width=True)
 
 
-def predict_image(img, model, upload):
+def predict_image(img, model, upload, auto=False):
     if upload:
-        img = cv2.imread(f'{output_directory}/temp.jpg')
-        large_image(img, model_name=model)
-        return
+        img = f'{output_directory}/temp.jpg'
+        if auto:
+            large_image(cv2.imread(img), model_name=model)
+            return
     else:
         img = f"storage/images/classification/{img}.jpg"
 
+    img = cv2.imread(img)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
     start = time.time()
-    prediction = predict_svm(cv2.imread(img), model)
+    prediction = predict_svm(img, model, x_train=model)
     end = time.time()
 
     run_time = round(end - start, 3)
