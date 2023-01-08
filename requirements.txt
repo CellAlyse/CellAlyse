@@ -1,6 +1,6 @@
 streamlit
 requests
-numpy
+numpy==1.23
 tensorflow==2.9
 tensorflow_addons
 matplotlib
