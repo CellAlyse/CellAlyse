@@ -14,6 +14,7 @@ def load_lottifile(filepath: str):
 
 
 def cbc():
+    st.warn("Bitte beachten Sie, dass die Seite wegen dem begrenztem RAM abstürzen kann.")
     lottie_progress = load_lottifile("style/87081-blood-cell-morph.json")
 
     st.sidebar.markdown("# Blutzellentyp")
