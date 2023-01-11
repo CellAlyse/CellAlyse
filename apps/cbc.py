@@ -58,8 +58,7 @@ def cbc():
             prepare_upload(image)
             st.image(f'{output_directory}/temp.jpg', use_column_width=True)
             upload = True
-            # clear cache
-            # st.experimental_memo.clear()
+            st.experimental_memo.clear()
 
     if cell_type == 'rbc':
         out_img = 'edge_mask.png'
