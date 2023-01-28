@@ -7,7 +7,6 @@ from apps.wbc import wbc
 from apps.Analyse import analyse
 from apps.home import home
 from apps.cam import cam
-from apps.render import render
 
 icon = Image.open("style/favicon.ico")
 st.set_page_config(
@@ -49,8 +48,8 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 ##st.markdown('<style>' + open('style/style.css').read() + '</style>', unsafe_allow_html=True)
 with st.sidebar:
-    selected = option_menu("Navigation", ["Home", "weiße Blutzellen", "Zählung", "Analyse", "Kamera", "Mikroskop"],
-                           icons=["house", "bar-chart-steps", "clipboard-data", "moisture", "camera", "box"],
+    selected = option_menu("Navigation", ["Home", "weiße Blutzellen", "Zählung", "Analyse", "Mikroskop"],
+                           icons=["house", "bar-chart-steps", "clipboard-data", "moisture", "box"],
                            styles={
                                "icon": {"color": "#a9dc76", "font-size": "20px"},
                                "nav-link-selected": {"background-color": "#3d3b40"},
