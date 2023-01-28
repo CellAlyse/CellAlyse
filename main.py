@@ -6,7 +6,6 @@ from apps.cbc import cbc
 from apps.wbc import wbc
 from apps.Analyse import analyse
 from apps.home import home
-from apps.cam import cam
 
 icon = Image.open("style/favicon.ico")
 st.set_page_config(
