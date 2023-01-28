@@ -6,6 +6,7 @@ from apps.cbc import cbc
 from apps.wbc import wbc
 from apps.Analyse import analyse
 from apps.home import home
+from apps.render import render
 
 icon = Image.open("style/favicon.ico")
 st.set_page_config(
