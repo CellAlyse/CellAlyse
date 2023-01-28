@@ -14,7 +14,6 @@ def load_lottifile(filepath: str):
 
 
 def cbc():
-    st.warning("Bitte beachten Sie, dass die Seite wegen dem begrenztem RAM abstürzen kann.")
     lottie_progress = load_lottifile("style/87081-blood-cell-morph.json")
 
     st.sidebar.markdown("# Blutzellentyp")
@@ -58,7 +57,8 @@ def cbc():
             prepare_upload(image)
             st.image(f'{output_directory}/temp.jpg', use_column_width=True)
             upload = True
-            st.experimental_memo.clear()
+            # clear cache
+            # st.experimental_memo.clear()
 
     if cell_type == 'rbc':
         out_img = 'edge_mask.png'
@@ -97,7 +97,3 @@ def process(image, cell_type, cht, ccl, distancetransform, upload=False, minRadi
         threshold = stthreshold(image)
         # threshold = cv2.normalize(src=threshold, dst=None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
         stcount( threshold, cell_type)
-
-    if upload == False:
-        st.write
-

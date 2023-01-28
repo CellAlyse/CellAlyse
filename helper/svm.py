@@ -333,7 +333,7 @@ def large_image(image, model_name):
     for box in boxes:
         x, y, w, h = box
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    # st.image(image, caption=f'{model_name} - {len(boxes)} nuclei detected', use_column_width=True)
+    st.image(image, caption=f'{model_name} - {len(boxes)} nuclei detected', use_column_width=True)
     st.write(model_name)
     if model_name == 'LISC':
         vertical = 87

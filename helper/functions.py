@@ -1,9 +1,12 @@
 from PIL import Image
 
 
-def prepare_upload(img):
+def prepare_upload(img, cam=False):
     # save the image as a temporary file.
-    image = Image.open(img)
-    image.save("storage/tmp/temp.jpg")
+    if not cam:
+        image = Image.open(img)
+        image.save("storage/tmp/temp.jpg")
+    else: 
+        img.save("storage/tmp/temp.jpg")
+        return None
     return img
-

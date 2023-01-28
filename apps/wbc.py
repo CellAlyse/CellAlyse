@@ -46,6 +46,7 @@ def segment_image(img, upload):
 
     # load image, save relevant information, display image and relevant information
     image = cv2.imread(img)
+
     nucleus, cnvx, roi = segmentation(image)
     st.image(nucleus, use_column_width=True)
 
@@ -61,7 +62,7 @@ def predict_image(img, model, upload, auto=False):
 
     img = cv2.imread(img)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
+    st.image(img, use_column_width=True)
     start = time.time()
     prediction = predict_svm(img, model, x_train=model)
     end = time.time()
