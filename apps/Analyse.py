@@ -13,7 +13,7 @@ def analyse():
     st.sidebar.markdown("# Datensatz analyse")
     st.sidebar.markdown("___")
 
-    model_name = st.sidebar.radio("", ("Raabin", "LISC", "BCCD"), index=2)
+    model_name = st.sidebar.radio("", ("Raabin", "LISC", "BCCD"), index=0)
 
     st.markdown("# Bild aus dem BCCD Datensatz")
     st.markdown("___")
