@@ -18,3 +18,4 @@ streamlit_option_menu==0.3.2
 tensorflow==2.9.0
 ipython
 pythreejs
+stpyvista
