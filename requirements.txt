@@ -19,3 +19,4 @@ tensorflow==2.9.0
 ipython
 pythreejs
 stpyvista
+scikit-learn
