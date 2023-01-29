@@ -1,11 +1,10 @@
 import pyvista as pv
-from pyvista import examples
 import streamlit as st
+from stpyvista import stpyvista
+
 
 def render():
-    ## Using pythreejs as pyvista backend
     pv.set_jupyter_backend('pythreejs')
-
 
     ## Initialize pyvista reader and plotter
     reader = pv.STLReader("storage/stl/main_body.stl")
@@ -22,9 +21,9 @@ def render():
     model_html = "model.html"
     other = plotter.export_html(model_html, backend='pythreejs')
 
-    ## Read the exported model
-    with open(model_html, 'r') as file:
-        model = file.read()
+    ## Final touches
+    #plotter.view_isometric()
+    plotter.background_color = 'white'
 
-    ## Show in webpage
-    st.components.v1.html(model, height=920, width=920)
+    ## Send to streamlit
+    stpyvista(plotter, key="pv_cube")
