@@ -11,7 +11,7 @@ frontend_dir = (Path(__file__).parent / "frontend").absolute()
 
 _component_func = components.declare_component("stpyvista", path=str(frontend_dir))
 
-
+@st.experimental_memo
 def render():
     pv.set_jupyter_backend("pythreejs")
 
