@@ -6,6 +6,8 @@ import pythreejs as tjs
 import pyvista as pv
 import streamlit.components.v1 as components
 from ipywidgets.embed import embed_minimal_html
+import streamlit as st
+
 
 frontend_dir = (Path(__file__).parent / "frontend").absolute()
 
