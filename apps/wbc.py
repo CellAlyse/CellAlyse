@@ -1,4 +1,5 @@
 import time
+
 from helper.functions import *
 from helper.svm import *
 
@@ -11,7 +12,9 @@ def wbc():
     auto = False
     if option_wbc == "Erkennen":
         st.sidebar.markdown("___")
-        model_name = st.sidebar.radio("Modell auswählen", ("Raabin", "LISC", "BCCD"), index=0)
+        model_name = st.sidebar.radio(
+            "Modell auswählen", ("Raabin", "LISC", "BCCD"), index=0
+        )
         auto = st.sidebar.checkbox("Automatische Bearbeitung", value=False)
         st.sidebar.markdown("___")
     upload = st.sidebar.selectbox("Upload oder Testbild?", ("Testbild", "Upload"))
@@ -19,7 +22,9 @@ def wbc():
     if upload == "Testbild":
         st.markdown("# Bild auswählen")
 
-        image = st.radio("", ("Testbild 1", "Testbild 2", "Testbild 3", "Testbild 4", "Testbild 5"))
+        image = st.radio(
+            "", ("Testbild 1", "Testbild 2", "Testbild 3", "Testbild 4", "Testbild 5")
+        )
         st.image(f"storage/images/classification/{image}.jpg", use_column_width=True)
         custom = False
     else:
@@ -27,7 +32,7 @@ def wbc():
         image = st.file_uploader("Bild hochladen", type=["jpg", "png", "jpeg", "bmp"])
         if image is not None:
             prepare_upload(image)
-            st.image(f'{output_directory}/temp.jpg', use_column_width=True)
+            st.image(f"{output_directory}/temp.jpg", use_column_width=True)
             custom = True
 
     if st.button("Analyse starten") and image is not None:
@@ -40,7 +45,7 @@ def wbc():
 
 def segment_image(img, upload):
     if upload:
-        img = f'{output_directory}/temp.jpg'
+        img = f"{output_directory}/temp.jpg"
     else:
         img = f"storage/images/classification/{img}.jpg"
 
@@ -53,7 +58,7 @@ def segment_image(img, upload):
 
 def predict_image(img, model, upload, auto=False):
     if upload:
-        img = f'{output_directory}/temp.jpg'
+        img = f"{output_directory}/temp.jpg"
         if auto:
             large_image(cv2.imread(img), model_name=model)
             return
@@ -69,8 +74,14 @@ def predict_image(img, model, upload, auto=False):
 
     run_time = round(end - start, 3)
 
-    st.markdown(f"##### Blutzelle: <span style='color:#96b34a'>{read(prediction)}</span>", unsafe_allow_html=True)
-    st.markdown(f"##### Laufzeit: <span style='color:#96b34a'>{run_time}</span> Sekunden", unsafe_allow_html=True)
+    st.markdown(
+        f"##### Blutzelle: <span style='color:#96b34a'>{read(prediction)}</span>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        f"##### Laufzeit: <span style='color:#96b34a'>{run_time}</span> Sekunden",
+        unsafe_allow_html=True,
+    )
 
 
 def read(prediction):
@@ -79,6 +90,6 @@ def read(prediction):
         2: "Lymphozyt",
         3: "Monozyt",
         4: "Eosinophil",
-        5: "Basophil"
+        5: "Basophil",
     }
     return switcher.get(prediction, "Invalid")

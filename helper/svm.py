@@ -1,17 +1,16 @@
 import glob
+import json
 import os
+
 import altair as alt
 import cv2
-import numpy as np
-import json
-import streamlit as st
-import pyhdust.images as phim
-from scipy.spatial import ConvexHull
 import joblib
-from skimage import filters as fl
+import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
-import seaborn as sn
+import pyhdust.images as phim
+import streamlit as st
+from scipy.spatial import ConvexHull
+from skimage import filters as fl
 
 
 def segmentation(img):
@@ -69,13 +68,15 @@ def segmentation(img):
         Nucleus_img = np.zeros_like(min_MS_KM)
         Nucleus_img[min_MS_KM >= thresh2] = 255
     except:
-        print('try-Except')
+        print("try-Except")
         _M = cv2.GaussianBlur(_M, ksize=(5, 5), sigmaX=0)
         thresh2 = fl.threshold_multiotsu(_M, 2)
         Nucleus_img = np.zeros_like(_M)
         Nucleus_img[_M >= thresh2] = 255
 
-    contours, _ = cv2.findContours(Nucleus_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(
+        Nucleus_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )
     pad_del = np.zeros_like(Nucleus_img)
 
     max_area = max(cv2.contourArea(contours[idx]) for idx in np.arange(len(contours)))
@@ -84,7 +85,9 @@ def segmentation(img):
             cv2.drawContours(pad_del, contours, j, color=255, thickness=-1)
     Nucleus_img[pad_del > 0] = 0
 
-    contours, _ = cv2.findContours(Nucleus_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(
+        Nucleus_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )
     _perimeter = 0
     for cnt in contours:
         _perimeter += cv2.arcLength(cnt, True)
@@ -115,10 +118,10 @@ def segmentation(img):
 
     return Nucleus_img, img_convex, img_ROC
 
-def feature_extractor(img, min_area=100):
 
+def feature_extractor(img, min_area=100):
     Ftr_List = []
-    #org_img = cv2.resize(img, dsize=(height, width))
+    # org_img = cv2.resize(img, dsize=(height, width))
     org_img = img.copy()
     img[:, :, 0] = org_img[:, :, 0].copy()
     img[:, :, 1] = org_img[:, :, 1].copy()
@@ -163,7 +166,7 @@ def feature_extractor(img, min_area=100):
     b_temp = np.where(min_MS < KM, min_MS, KM)
     min_MS_KM = min_MS - b_temp
 
-#    cv2.imshow('Step 1' , cv2.resize(Nucleus_img , (256 ,256)))
+    #    cv2.imshow('Step 1' , cv2.resize(Nucleus_img , (256 ,256)))
 
     min_MS_KM = cv2.GaussianBlur(min_MS_KM, ksize=(5, 5), sigmaX=0)
     try:
@@ -171,13 +174,15 @@ def feature_extractor(img, min_area=100):
         Nucleus_img = np.zeros_like(min_MS_KM)
         Nucleus_img[min_MS_KM >= thresh2] = 255
     except:
-        print('try-Except')
+        print("try-Except")
         _M = cv2.GaussianBlur(_M, ksize=(5, 5), sigmaX=0)
         thresh2 = fl.threshold_multiotsu(_M, 2)
         Nucleus_img = np.zeros_like(_M)
         Nucleus_img[_M >= thresh2] = 255
 
-    contours, _ = cv2.findContours(Nucleus_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(
+        Nucleus_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )
     pad_del = np.zeros_like(Nucleus_img)
 
     max_area = max(cv2.contourArea(contours[idx]) for idx in np.arange(len(contours)))
@@ -186,15 +191,17 @@ def feature_extractor(img, min_area=100):
             cv2.drawContours(pad_del, contours, j, color=255, thickness=-1)
     Nucleus_img[pad_del > 0] = 0
 
-    contours, _ = cv2.findContours(Nucleus_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(
+        Nucleus_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )
     _perimeter = 0
     for cnt in contours:
         _perimeter += cv2.arcLength(cnt, True)
 
-    temp_points = np.argwhere(Nucleus_img==255)
+    temp_points = np.argwhere(Nucleus_img == 255)
     Ncl_points = np.zeros_like(temp_points)
-    Ncl_points[:,0] = temp_points[:,1]
-    Ncl_points[:,1] = temp_points[:,0]
+    Ncl_points[:, 0] = temp_points[:, 1]
+    Ncl_points[:, 1] = temp_points[:, 0]
     _area = np.sum(Nucleus_img)
 
     cvx_hull = ConvexHull(Ncl_points)
@@ -218,49 +225,55 @@ def feature_extractor(img, min_area=100):
 
     flag_empty = len(contours) > 0
     if not flag_empty:
-        Error = '[Error 1]: No contours are detected'
+        Error = "[Error 1]: No contours are detected"
         print(Error)
         return False, Error, None
 
     if max_area <= min_area:
-        Error = '[ERROR 2]: max area of nucleus is lower than %d'%(min_area)
+        Error = "[ERROR 2]: max area of nucleus is lower than %d" % (min_area)
         print(Error)
         return False, Error, None
 
     Circularity = (_perimeter) ** 2 / (4 * 3.14 * _area)
-    Convexity = (Cvx_prm / _perimeter)
-    Solidity = (_area / Cvx_area)
+    Convexity = Cvx_prm / _perimeter
+    Solidity = _area / Cvx_area
     Shape_Features = np.array([Circularity, Convexity, Solidity])
     Ftr_List.extend([Circularity, Convexity, Solidity])
     if np.sum(img_convex - Nucleus_img) == 0:
-        print('******* Convex image == nucleus_image ********')
-        temp = [1]*72
+        print("******* Convex image == nucleus_image ********")
+        temp = [1] * 72
         temp.extend(Ftr_List)
         return True, None, np.array(temp)
     # >>>>>> NEW CODES <<<<<<<<<
     ALL_Channels = []
-    ALL_Channels.append(balance_img[:, :, 0]) # channel R : index 0
-    ALL_Channels.append(balance_img[:, :, 1]) # channel G : index 1
-    ALL_Channels.append(balance_img[:, :, 2]) # channel B : index 2
+    ALL_Channels.append(balance_img[:, :, 0])  # channel R : index 0
+    ALL_Channels.append(balance_img[:, :, 1])  # channel G : index 1
+    ALL_Channels.append(balance_img[:, :, 2])  # channel B : index 2
 
     HSV = cv2.cvtColor(balance_img, cv2.COLOR_RGB2HSV)
-    ALL_Channels.append(HSV[:, :, 0]) # channel H : index 3
-    ALL_Channels.append(HSV[:, :, 1]) # channel S : index 4
-    ALL_Channels.append(HSV[:, :, 2]) # channel V : index 5
+    ALL_Channels.append(HSV[:, :, 0])  # channel H : index 3
+    ALL_Channels.append(HSV[:, :, 1])  # channel S : index 4
+    ALL_Channels.append(HSV[:, :, 2])  # channel V : index 5
 
     LAB = cv2.cvtColor(balance_img, cv2.COLOR_RGB2LAB)
-    ALL_Channels.append(LAB[:, :, 0]) # channel L : index 6
-    ALL_Channels.append(LAB[:, :, 1]) # channel A : index 7
-    ALL_Channels.append(LAB[:, :, 2]) # channel BB : index 8
+    ALL_Channels.append(LAB[:, :, 0])  # channel L : index 6
+    ALL_Channels.append(LAB[:, :, 1])  # channel A : index 7
+    ALL_Channels.append(LAB[:, :, 2])  # channel BB : index 8
 
     YCrCb = cv2.cvtColor(balance_img, cv2.COLOR_RGB2YCrCb)
-    ALL_Channels.append(YCrCb[:, :, 0]) # channel Y : index 9
-    ALL_Channels.append(YCrCb[:, :, 1]) # channel Cr : index 10
-    ALL_Channels.append(YCrCb[:, :, 2]) # channel Cb : index 11
+    ALL_Channels.append(YCrCb[:, :, 0])  # channel Y : index 9
+    ALL_Channels.append(YCrCb[:, :, 1])  # channel Cr : index 10
+    ALL_Channels.append(YCrCb[:, :, 2])  # channel Cb : index 11
 
-    NCL_pxls_value = np.zeros(shape=(len(ALL_Channels), Ncl_points.shape[0]), dtype=np.uint8)
-    CVX_pxls_Value = np.zeros(shape=(len(ALL_Channels), CVX_points.shape[0]), dtype=np.uint8)
-    ROC_pxls_Value = np.zeros(shape=(len(ALL_Channels), ROC_points.shape[0]), dtype=np.uint8)
+    NCL_pxls_value = np.zeros(
+        shape=(len(ALL_Channels), Ncl_points.shape[0]), dtype=np.uint8
+    )
+    CVX_pxls_Value = np.zeros(
+        shape=(len(ALL_Channels), CVX_points.shape[0]), dtype=np.uint8
+    )
+    ROC_pxls_Value = np.zeros(
+        shape=(len(ALL_Channels), ROC_points.shape[0]), dtype=np.uint8
+    )
 
     for ch in range(len(ALL_Channels)):
         p_roc, p_ncl = 0, 0
@@ -287,9 +300,15 @@ def feature_extractor(img, min_area=100):
     Roc_mean_std[:, 0] = np.mean(ROC_pxls_Value, axis=1)
     Roc_mean_std[:, 1] = np.std(ROC_pxls_Value, axis=1)
 
-    Ratio_Ncl2Cvx = np.reshape(np.divide(Ncl_mean_std, Cvx_mean_std), newshape=(len(ALL_Channels)*2,))
-    Ratio_Roc2Cvx = np.reshape(np.divide(Roc_mean_std, Cvx_mean_std), newshape=(len(ALL_Channels)*2,))
-    Ratio_Roc2Ncl = np.reshape(np.divide(Roc_mean_std, Ncl_mean_std), newshape=(len(ALL_Channels)*2,))
+    Ratio_Ncl2Cvx = np.reshape(
+        np.divide(Ncl_mean_std, Cvx_mean_std), newshape=(len(ALL_Channels) * 2,)
+    )
+    Ratio_Roc2Cvx = np.reshape(
+        np.divide(Roc_mean_std, Cvx_mean_std), newshape=(len(ALL_Channels) * 2,)
+    )
+    Ratio_Roc2Ncl = np.reshape(
+        np.divide(Roc_mean_std, Ncl_mean_std), newshape=(len(ALL_Channels) * 2,)
+    )
     Color_Features = np.concatenate((Ratio_Ncl2Cvx, Ratio_Roc2Cvx))
     Color_Features = np.nan_to_num(Color_Features, nan=0, posinf=1)
     ALL_Features = np.concatenate((Color_Features, Shape_Features))
@@ -297,9 +316,9 @@ def feature_extractor(img, min_area=100):
     return True, None, ALL_Features
 
 
-def predict_svm(image, model='Raabin', x_train='Raabin'):
-    model = joblib.load(f'storage/models/svm/{model}.pkl')
-    x_train = np.load(f'storage/models/svm/{x_train}_train.npy')
+def predict_svm(image, model="Raabin", x_train="Raabin"):
+    model = joblib.load(f"storage/models/svm/{model}.pkl")
+    x_train = np.load(f"storage/models/svm/{x_train}_train.npy")
 
     ncl, error, features = feature_extractor(image)
 
@@ -312,6 +331,7 @@ def predict_svm(image, model='Raabin', x_train='Raabin'):
         return pred[0]
     else:
         return error
+
 
 @st.experimental_memo
 def load_model(model_path, x_train):
@@ -333,12 +353,16 @@ def large_image(image, model_name):
     for box in boxes:
         x, y, w, h = box
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    st.image(image, caption=f'{model_name} - {len(boxes)} nuclei detected', use_column_width=True)
+    st.image(
+        image,
+        caption=f"{model_name} - {len(boxes)} nuclei detected",
+        use_column_width=True,
+    )
     st.write(model_name)
-    if model_name == 'LISC':
+    if model_name == "LISC":
         vertical = 87
         horizontal = 91
-    elif model_name == 'Raabin':
+    elif model_name == "Raabin":
         vertical = 184 // 2
         horizontal = 192 // 2
     else:
@@ -363,11 +387,13 @@ def large_image(image, model_name):
         if window_y + vertical * 2 > image.shape[0]:
             window_y = image.shape[0] - vertical * 2
 
-        window = image[window_y:window_y + vertical * 2, window_x:window_x + horizontal * 2]
+        window = image[
+            window_y : window_y + vertical * 2, window_x : window_x + horizontal * 2
+        ]
 
         col1, col2 = st.columns(2)
         col1.image(window, use_column_width=True)
-        col2.write(f'Blutzelle: {read(predict_svm(window, model_name))}')
+        col2.write(f"Blutzelle: {read(predict_svm(window, model_name))}")
 
 
 @st.experimental_memo
@@ -377,9 +403,10 @@ def read(prediction):
         2: "Lymphozyt",
         3: "Monozyt",
         4: "Eosinophil",
-        5: "Basophil"
+        5: "Basophil",
     }
     return switcher.get(prediction, "Invalid")
+
 
 @st.experimental_memo
 def get_names(i):
@@ -396,7 +423,10 @@ def get_names(i):
     else:
         return "Invalid"
 
-def folder_predict(img_path, model='data/Raabin.pkl', x_train_path='images/svm/x_train.npy', up=False):
+
+def folder_predict(
+    img_path, model="data/Raabin.pkl", x_train_path="images/svm/x_train.npy", up=False
+):
     model = joblib.load(f"storage/models/svm/{model}.pkl")
     if up == False:
         img = cv2.imread(img_path)
@@ -409,22 +439,23 @@ def folder_predict(img_path, model='data/Raabin.pkl', x_train_path='images/svm/x
         ftrs = np.array(ftrs).reshape(1, -1)
         # normalize feature using max-min way
         mn, mx = x_train.min(axis=0), x_train.max(axis=0)
-        ftrs = (ftrs - mn)/(mx - mn)
+        ftrs = (ftrs - mn) / (mx - mn)
         pred = model.predict(ftrs)
         return pred[0]
     else:
         return error
 
+
 def dataset_prediction(name, model_name):
     predictions = []
-    st.write(f'Prediction of {model_name}')
+    st.write(f"Prediction of {model_name}")
     if name == "BCCD":
-        length = len(os.listdir('storage/BCCD/'))
+        length = len(os.listdir("storage/BCCD/"))
         my_bar = st.progress(0)
         i = 0
         for img in glob.glob(f"storage/{name}/*.jpeg"):
             i += 1
-            my_bar.progress(i/length)
+            my_bar.progress(i / length)
             predictions.append(folder_predict(img, model_name, model_name, False))
 
     my_bar.empty()
@@ -454,20 +485,24 @@ def dataset_prediction(name, model_name):
     for i in unique_values:
         gt_names.append(get_names(i))
 
-
     df = pd.DataFrame({"names": names, "counts": counts, "ground_trurt": gt_counts})
-    colors=["#a9dc76", "#ff6188", "#fc9867", "#78dce8"]
-    chart = alt.Chart(df).mark_bar().encode(
-        x=alt.X('names', axis=alt.Axis(labelAngle=0), title="Blutzellen", sort=None),
-        y=alt.Y('counts', title="Anzahl"),
-        color=alt.Color('names', scale=alt.Scale(range=colors)),
-        tooltip=['names', 'counts']
-    ).properties(
-        width=alt.Step(80)  # controls width of bar.
+    colors = ["#a9dc76", "#ff6188", "#fc9867", "#78dce8"]
+    chart = (
+        alt.Chart(df)
+        .mark_bar()
+        .encode(
+            x=alt.X(
+                "names", axis=alt.Axis(labelAngle=0), title="Blutzellen", sort=None
+            ),
+            y=alt.Y("counts", title="Anzahl"),
+            color=alt.Color("names", scale=alt.Scale(range=colors)),
+            tooltip=["names", "counts"],
+        )
+        .properties(width=alt.Step(80))  # controls width of bar.
     )
     st.altair_chart(chart, use_container_width=True)
 
-    st.markdown('---')
+    st.markdown("---")
     # create a dataframe with the ground truth and the predictions
     df = pd.DataFrame({"Blutzelle": names, "KI": counts, "Arzt": gt_counts})
     st.write(df)
