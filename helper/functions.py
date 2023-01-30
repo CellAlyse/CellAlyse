@@ -6,7 +6,7 @@ def prepare_upload(img, cam=False):
     if not cam:
         image = Image.open(img)
         image.save("storage/tmp/temp.jpg")
-    else: 
+    else:
         img.save("storage/tmp/temp.jpg")
         return None
     return img
