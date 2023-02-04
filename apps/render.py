@@ -21,14 +21,32 @@ def render():
     plotter.background_color = "#161616"
 
     mesh = reader.read()
+
+    # add reflection    
     plotter.add_mesh(
         mesh,
         color="#a9dc76",
-        specular=0.5,
-        specular_power=10,
+        specular=0.005,
+        specular_power=64.0,
         smooth_shading=False,
         show_edges=False,
+        ambient=0.2,
+        diffuse=0.8,
     )
+
+    # increase quality of the mesh
+    plotter.enable_eye_dome_lighting()
+    plotter.enable_anti_aliasing()
+
+    # increase quality of the mesh even more
+    plotter.enable_depth_peeling()
+
+    # add a better light source
+    plotter.add_light(
+        pv.Light(position=[0, 10, 10], intensity=0.8)
+    )
+
+
 
     model_html = "model.html"
     other = plotter.export_html(model_html, backend="pythreejs")
@@ -36,7 +54,6 @@ def render():
     plotter.background_color = "white"
 
     stpyvista(plotter, key="pv_cube")
-
 
 def get_Meshes(renderer: tjs.Renderer) -> list[tjs.Mesh]:
     return [
@@ -88,7 +105,7 @@ class HTML_stpyvista:
 
         pv_to_tjs.clearOpacity = opacity_background
 
-        embed_minimal_html(model_html, [pv_to_tjs, *animations], title="🧊-stpyvista")
+        embed_minimal_html(model_html, [pv_to_tjs, *animations], title="CellAlyse")
         threejs_html = model_html.getvalue()
         model_html.close()
 
