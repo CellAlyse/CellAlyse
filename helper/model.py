@@ -71,7 +71,6 @@ def concatenate(input1, input2, crop):
     )
 
 
-@st.experimental_memo
 def do_unet(cell_type="rbc"):
     """
     Dual UNet model mit angepasster anzahl an Layern
@@ -142,7 +141,6 @@ def do_unet(cell_type="rbc"):
     return model
 
 
-@st.experimental_memo
 def load_image_list(img_files):
     """
     :param img_files --> Liste mit Bildern (enumerate)
@@ -155,7 +153,6 @@ def load_image_list(img_files):
     return imgs
 
 
-@st.experimental_memo
 def clahe_images(img_list):
     """
     Clahe für jedes Bild in der Liste.
@@ -175,7 +172,6 @@ def clahe_images(img_list):
     return img_list
 
 
-@st.experimental_memo
 def preprocess_data(imgs, padding=padding[1]):
     """
     Padding wird zu den Bildern, Masken, Edges hinzugefügt.
@@ -192,7 +188,6 @@ def preprocess_data(imgs, padding=padding[1]):
     return imgs
 
 
-@st.experimental_memo
 def load_data(img_list, padding=padding[1]):
     """
     Lädt die Bilder und ist gleichzeitig für das Preprocessing zuständig.
@@ -207,7 +202,6 @@ def load_data(img_list, padding=padding[1]):
     return preprocess_data(imgs, padding=padding)
 
 
-@st.experimental_memo
 def slice(
     imgs, padding=padding[1], input_size=input_shape[0], output_size=output_shape[0]
 ):
@@ -246,7 +240,6 @@ def slice(
     return np.array(img_chips)
 
 
-@st.experimental_memo
 def normalize(img):
     """
     Normalisiert die Bilder.
@@ -257,7 +250,6 @@ def normalize(img):
     return np.array((img - np.min(img)) / (np.max(img) - np.min(img)))
 
 
-@st.experimental_memo
 def get_sizes(img, padding=padding[1], input=input_shape[0], output=output_shape[0]):
     """
     Berechnet die Original Dimensionen des Bildes.
@@ -278,7 +270,6 @@ def get_sizes(img, padding=padding[1], input=input_shape[0], output=output_shape
     ]
 
 
-@st.experimental_memo
 def reshape(img, size_x, size_y):
     """
     Mithile der Funktion get_sizes wird das Bild zum Original Umgewandelt
@@ -301,7 +292,6 @@ def concat(imgs):
     return cv2.vconcat([cv2.hconcat(im_list) for im_list in imgs[:, :, :, :]])
 
 
-@st.experimental_memo
 def st_predict(img="images/Bild1.jpg", cell_type="rbc"):
     """
     Segmentiere das Bild mit aktuell NUR U-NET.
@@ -376,7 +366,6 @@ def st_predict(img="images/Bild1.jpg", cell_type="rbc"):
         return new_mask - new_edge
 
 
-@st.experimental_memo
 def stthreshold(img="edge.png", cell_type="rbc"):
     image = img
 
@@ -386,7 +375,6 @@ def stthreshold(img="edge.png", cell_type="rbc"):
     # plt.imsave(f'{output_directory}/threshold_tmp.png', image, cmap='gray')
 
 
-@st.experimental_memo
 def hough_transform(
     img="edge.png",
     cell_type="rbc",
@@ -433,7 +421,6 @@ def hough_transform(
     # plt.imsave(f'{output_directory}/hough_transform.png', output)
 
 
-@st.experimental_memo
 def component_labeling(img="edge.png"):
     image = img
     img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -454,7 +441,6 @@ def component_labeling(img="edge.png"):
     st.write(f"Connected component labeling: {num_labels}")
 
 
-@st.experimental_memo
 def stcount(img="threshold_mask.png", cell_type="rbc"):
     # getting the input image
     image = img
