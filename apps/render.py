@@ -13,48 +13,6 @@ frontend_dir = (Path(__file__).parent / "frontend").absolute()
 
 _component_func = components.declare_component("stpyvista", path=str(frontend_dir))
 
-def render():
-    pv.set_jupyter_backend("pythreejs")
-
-    reader = pv.STLReader("storage/stl/main_body.stl")
-    plotter = pv.Plotter(border=True, window_size=[820, 820])
-    plotter.background_color = "#161616"
-
-    mesh = reader.read()
-
-    # add reflection    
-    plotter.add_mesh(
-        mesh,
-        color="#a9dc76",
-        specular=0.005,
-        specular_power=64.0,
-        smooth_shading=False,
-        show_edges=False,
-        ambient=0.2,
-        diffuse=0.8,
-    )
-
-    # increase quality of the mesh
-    plotter.enable_eye_dome_lighting()
-    plotter.enable_anti_aliasing()
-
-    # increase quality of the mesh even more
-    plotter.enable_depth_peeling()
-
-    # add a better light source
-    plotter.add_light(
-        pv.Light(position=[0, 10, 10], intensity=0.8)
-    )
-
-
-
-    model_html = "model.html"
-    other = plotter.export_html(model_html, backend="pythreejs")
-
-    plotter.background_color = "white"
-
-    stpyvista(plotter, key="pv_cube")
-
 def get_Meshes(renderer: tjs.Renderer) -> list[tjs.Mesh]:
     return [
         child
@@ -64,8 +22,7 @@ def get_Meshes(renderer: tjs.Renderer) -> list[tjs.Mesh]:
 
 
 def spin_element_on_axis(
-    renderer: tjs.Renderer, axis: str = "z", revolution_time: float = 4.0
-):
+    renderer: tjs.Renderer, axis: str = "z", revolution_time: float = 4.0):
     spin_track = tjs.NumberKeyframeTrack(
         name=f".rotation[{axis}]", times=[0, revolution_time], values=[0, 6.28]
     )
@@ -146,3 +103,27 @@ def stpyvista(
     )
 
     return component_value
+    
+def render():
+    pv.set_jupyter_backend("pythreejs")
+
+    reader = pv.STLReader("storage/stl/main_body.stl")
+    plotter = pv.Plotter(border=True, window_size=[820, 820])
+    plotter.background_color = "#161616"
+
+    mesh = reader.read()
+    plotter.add_mesh(
+        mesh,
+        color="#a9dc76",
+        specular=0.5,
+        specular_power=10,
+        smooth_shading=False,
+        show_edges=False,
+    )
+
+    model_html = "model.html"
+    other = plotter.export_html(model_html, backend="pythreejs")
+
+    plotter.background_color = "white"
+
+    stpyvista(plotter, key="pv_cube")
