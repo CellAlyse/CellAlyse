@@ -5,7 +5,6 @@ from streamlit_option_menu import option_menu
 from apps.Analyse import analyse
 from apps.cbc import cbc
 from apps.home import home
-from apps.render import render
 from apps.wbc import wbc
 
 icon = Image.open("style/favicon.ico")
@@ -50,8 +49,8 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 with st.sidebar:
     selected = option_menu(
         "Navigation",
-        ["Home", "weiße Blutzellen", "Zählung", "Analyse", "Mikroskop"],
-        icons=["house", "bar-chart-steps", "clipboard-data", "moisture", "box"],
+        ["Home", "weiße Blutzellen", "Zählung", "Analyse"],
+        icons=["house", "bar-chart-steps", "clipboard-data", "moisture"],
         styles={
             "icon": {"color": "#a9dc76", "font-size": "20px"},
             "nav-link-selected": {"background-color": "#3d3b40"},
@@ -68,7 +67,3 @@ elif selected == "Analyse":
     analyse()
 elif selected == "Home":
     home()
-elif selected == "Kamera":
-    cam()
-elif selected == "Mikroskop":
-    render()
