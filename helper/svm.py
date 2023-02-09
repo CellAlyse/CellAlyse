@@ -347,7 +347,6 @@ def large_image(image, model_name):
 
     # remove small objects
     nuclei = morphology.remove_small_objects(nuclei, min_size=100)
-    nuclei = remove_overlapping_objects(nuclei, 400)
 
     # get bounding boxes of every nucleus
     contours, _ = cv2.findContours(nuclei, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
