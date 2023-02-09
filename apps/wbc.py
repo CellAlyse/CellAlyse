@@ -38,9 +38,32 @@ def wbc():
     if st.button("Analyse starten") and image is not None:
         if option_wbc == "Segmentieren":
             segment_image(image, custom)
+            
+
 
         else:
             predict_image(image, model_name, custom, auto)
+            
+            if upload == "Testbild":
+                # get the image name. The name is the number at the end of the string
+                img_name = image.split(" ")[1]
+                
+                st.markdown("___")
+                st.markdown(f"Bei dem Testbild handelt es sich um ein: {show_true(int(img_name))}")
+
+def show_true(img_id):
+    if img_id == 1:
+        return "Neutrophil"
+    elif img_id == 2:
+        return "Eosinophil"
+    elif img_id == 3:
+        return "Monozyt"
+    elif img_id == 4:
+        return "Lymphozyt"
+    elif img_id == 5:
+        return "Basophil"
+    else:
+        return "Keine Zelle"
 
 
 def segment_image(img, upload):
@@ -51,6 +74,7 @@ def segment_image(img, upload):
 
     # load image, save relevant information, display image and relevant information
     image = cv2.imread(img)
+    #image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     nucleus, cnvx, roi = segmentation(image)
     st.image(nucleus, use_column_width=True)
@@ -67,7 +91,7 @@ def predict_image(img, model, upload, auto=False):
 
     img = cv2.imread(img)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    st.image(img, use_column_width=True)
+    # st.image(img, use_column_width=True)
     start = time.time()
     prediction = predict_svm(img, model, x_train=model)
     end = time.time()

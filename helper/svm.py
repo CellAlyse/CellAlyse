@@ -11,6 +11,7 @@ import pyhdust.images as phim
 import streamlit as st
 from scipy.spatial import ConvexHull
 from skimage import filters as fl
+from skimage import morphology
 
 
 def segmentation(img):
@@ -333,16 +334,17 @@ def predict_svm(image, model="Raabin", x_train="Raabin"):
         return error
 
 
-@st.experimental_memo
 def load_model(model_path, x_train):
     model = joblib.load(model_path)
     x_train = np.load(x_train)
 
     return model, x_train
 
-
 def large_image(image, model_name):
     nuclei, _, _ = segmentation(image)
+
+    # remove small objects
+    nuclei = morphology.remove_small_objects(nuclei, min_size=100)
 
     # get bounding boxes of every nucleus
     contours, _ = cv2.findContours(nuclei, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -396,7 +398,6 @@ def large_image(image, model_name):
         col2.write(f"Blutzelle: {read(predict_svm(window, model_name))}")
 
 
-@st.experimental_memo
 def read(prediction):
     switcher = {
         1: "Neutrophil",
@@ -408,7 +409,6 @@ def read(prediction):
     return switcher.get(prediction, "Invalid")
 
 
-@st.experimental_memo
 def get_names(i):
     if i == 1:
         return "Neutrophil"
