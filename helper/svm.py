@@ -12,6 +12,8 @@ import streamlit as st
 from scipy.spatial import ConvexHull
 from skimage import filters as fl
 from skimage import morphology
+from scipy.ndimage.morphology import binary_dilation, binary_fill_holes
+from scipy import ndimage
 
 
 def segmentation(img):
@@ -339,12 +341,13 @@ def load_model(model_path, x_train):
     x_train = np.load(x_train)
 
     return model, x_train
-
+    
 def large_image(image, model_name):
     nuclei, _, _ = segmentation(image)
 
     # remove small objects
     nuclei = morphology.remove_small_objects(nuclei, min_size=100)
+    nuclei = remove_overlapping_objects(nuclei, 400)
 
     # get bounding boxes of every nucleus
     contours, _ = cv2.findContours(nuclei, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
