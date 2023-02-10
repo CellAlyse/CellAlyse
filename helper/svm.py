@@ -383,14 +383,14 @@ def large_image(image, model_name):
     width = image.shape[1]
     height = image.shape[0]
     if model_name == "LISC":
-        vertical = 0.0447530864*height
-        horizontal = 0.0351080247*width
+        vertical = int(0.0447530864*height)
+        horizontal = int(0.0351080247*width)
     elif model_name == "Raabin":
-        vertical = 0.0473251029*height
-        horizontal = 0.037037037*width
+        vertical = int(0.0473251029*height)
+        horizontal = int(0.037037037*width)
     else:
-        vertical = 0.0617283951*height
-        horizontal = 0.0617283951*width
+        vertical = int(0.0617283951*height)
+        horizontal = int(0.0617283951*width)
 
     for box in boxes:
         x, y, w, h = box
