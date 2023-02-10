@@ -359,7 +359,7 @@ def bbox(image):
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
     st.image(
         image,
-        caption=f"{len(boxes)} nuclei detected",
+        caption=f"Es wurde {len(boxes)} Zellen erkannt.",
         use_column_width=True,
     )
 
