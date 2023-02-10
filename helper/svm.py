@@ -359,7 +359,7 @@ def bbox(image):
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
     st.image(
         image,
-        caption=f"Es wurde {len(boxes)} Zellen erkannt.",
+        caption=f"Es wurden {len(boxes)} Zellen erkannt.",
         use_column_width=True,
     )
 
