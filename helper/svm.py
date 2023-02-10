@@ -342,7 +342,7 @@ def load_model(model_path, x_train):
 
     return model, x_train
     
-def large_image(image, model_name):
+def bbox(image):
     nuclei, _, _ = segmentation(image)
 
     # remove small objects
@@ -359,7 +359,29 @@ def large_image(image, model_name):
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
     st.image(
         image,
-        caption=f"{model_name} - {len(boxes)} nuclei detected",
+        caption=f"{len(boxes)} nuclei detected",
+        use_column_width=True,
+    )
+
+def large_image(image, model_name):
+
+    nuclei, _, _ = segmentation(image)
+
+    # remove small objects
+    nuclei = morphology.remove_small_objects(nuclei, min_size=100)
+
+    # get bounding boxes of every nucleus
+    contours, _ = cv2.findContours(nuclei, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    boxes = [cv2.boundingRect(c) for c in contours]
+
+    # display image with bounding boxes
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    for box in boxes:
+        x, y, w, h = box
+        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    st.image(
+        image,
+        caption=f"{len(boxes)} nuclei detected",
         use_column_width=True,
     )
     st.write(model_name)
