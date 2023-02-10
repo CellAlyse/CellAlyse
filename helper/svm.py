@@ -380,16 +380,17 @@ def large_image(image, model_name):
         x, y, w, h = box
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-    st.write(model_name)
+    width = image.shape[1]
+    height = image.shape[0]
     if model_name == "LISC":
-        vertical = 87
-        horizontal = 91
+        vertical = 0.0447530864*height
+        horizontal = 0.0351080247*width
     elif model_name == "Raabin":
-        vertical = 184 // 2
-        horizontal = 192 // 2
+        vertical = 0.0473251029*height
+        horizontal = 0.037037037*width
     else:
-        vertical = 240 // 2
-        horizontal = 320 // 2
+        vertical = 0.0617283951*height
+        horizontal = 0.0617283951*width
 
     for box in boxes:
         x, y, w, h = box
