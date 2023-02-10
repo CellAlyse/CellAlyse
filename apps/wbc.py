@@ -30,7 +30,7 @@ def wbc():
         )
         st.image(f"storage/images/classification/{image}.jpg", use_column_width=True)
         custom = False
-    else:
+    elif upload == "Upload":
         st.markdown("# Bild hochladen")
         image = st.file_uploader("Bild hochladen", type=["jpg", "png", "jpeg", "bmp"])
         if image is not None:
@@ -70,7 +70,7 @@ def show_true(img_id):
 
 
 def segment_image(img, upload, _bbox=False):
-    if upload:
+    if upload=="Upload":
         img = f"{output_directory}/temp.jpg"
     else:
         img = f"storage/images/classification/{img}.jpg"
