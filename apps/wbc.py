@@ -17,6 +17,9 @@ def wbc():
         )
         auto = st.sidebar.checkbox("Automatische Bearbeitung", value=False)
         st.sidebar.markdown("___")
+    else:
+        st.sidebar.markdown("___")
+        _bbox = st.sidebar.checkbox("Bounding Box", value=False)
     upload = st.sidebar.selectbox("Upload oder Testbild?", ("Testbild", "Upload"))
 
     if upload == "Testbild":
@@ -37,7 +40,7 @@ def wbc():
 
     if st.button("Analyse starten") and image is not None:
         if option_wbc == "Segmentieren":
-            segment_image(image, custom)
+            segment_image(image, upload, _bbox)
             
 
 
@@ -66,7 +69,7 @@ def show_true(img_id):
         return "Keine Zelle"
 
 
-def segment_image(img, upload):
+def segment_image(img, upload, _bbox=False):
     if upload:
         img = f"{output_directory}/temp.jpg"
     else:
@@ -75,9 +78,11 @@ def segment_image(img, upload):
     # load image, save relevant information, display image and relevant information
     image = cv2.imread(img)
     #image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-    nucleus, cnvx, roi = segmentation(image)
-    st.image(nucleus, use_column_width=True)
+    if _bbox:
+        bbox(image)
+    else:
+        nucleus, cnvx, roi = segmentation(image)
+        st.image(nucleus, use_column_width=True)
 
 
 def predict_image(img, model, upload, auto=False):
