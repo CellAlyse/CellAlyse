@@ -1,4 +1,5 @@
 from streamlit_lottie import st_lottie_spinner
+import random
 
 from helper.svm import *
 
@@ -18,8 +19,7 @@ def analyse():
 
     st.markdown("# Bild aus dem BCCD Datensatz")
     st.markdown("___")
-    st.image("storage/BCCD/mono_2_4392.jpeg", use_column_width=True)
-
+    st.image(f"storage/BCCD/{random.choice(os.listdir('storage/BCCD'))}", use_column_width=True)
     if st.button("Komplette Analyse starten"):
         with st_lottie_spinner(lottie_progress, key="progress", loop=True):
             dataset_prediction("BCCD", model_name)

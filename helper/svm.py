@@ -469,7 +469,7 @@ def folder_predict(
 
 def dataset_prediction(name, model_name):
     predictions = []
-    st.write(f"Prediction of {model_name}")
+    st.write(f"Vorhersage von {model_name}")
     if name == "BCCD":
         length = len(os.listdir("storage/BCCD/"))
         my_bar = st.progress(0)

@@ -49,7 +49,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 with st.sidebar:
     selected = option_menu(
         "Navigation",
-        ["Home", "weiße Blutzellen", "Zählung", "Analyse"],
+        ["Home", "weiße Blutzellen", "Typisierung", "Analyse"],
         icons=["house", "bar-chart-steps", "clipboard-data", "moisture"],
         styles={
             "icon": {"color": "#a9dc76", "font-size": "20px"},
@@ -67,3 +67,4 @@ elif selected == "Analyse":
     analyse()
 elif selected == "Home":
     home()
+
