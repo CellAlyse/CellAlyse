@@ -70,7 +70,7 @@ def concatenate(input1, input2, crop):
         [tf.keras.layers.Cropping2D(crop)(input1), input2]
     )
 
-
+@st.cache_resource
 def do_unet(cell_type="rbc"):
     """
     Dual UNet model mit angepasster anzahl an Layern
@@ -187,7 +187,7 @@ def preprocess_data(imgs, padding=padding[1]):
     ]
     return imgs
 
-
+@st.cache_data
 def load_data(img_list, padding=padding[1]):
     """
     Lädt die Bilder und ist gleichzeitig für das Preprocessing zuständig.
@@ -291,7 +291,7 @@ def concat(imgs):
     """
     return cv2.vconcat([cv2.hconcat(im_list) for im_list in imgs[:, :, :, :]])
 
-
+@st.cache_data
 def st_predict(img="images/Bild1.jpg", cell_type="rbc"):
     """
     Segmentiere das Bild mit aktuell NUR U-NET.
@@ -351,18 +351,10 @@ def st_predict(img="images/Bild1.jpg", cell_type="rbc"):
     # plt.imsave(f'{output_directory}/mask.png', new_mask)
 
     if cell_type != "rbc":
-        st.image(new_mask, caption="Mask", use_column_width=True)
         return new_mask
     else:
         # plt.imsave(f'{output_directory}/edge.png', new_edge)
         # plt.imsave(f'{output_directory}/edge_mask.png', new_mask - new_edge)
-        st.image(
-            new_mask - new_edge,
-            caption="Edge Mask",
-            use_column_width=True,
-            clamp=True,
-            channels="RGB",
-        )
         return new_mask - new_edge
 
 
