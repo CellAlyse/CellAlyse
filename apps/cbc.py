@@ -103,8 +103,10 @@ def process(
 ):
     if upload:
         image = st_predict(f"{output_directory}/temp.jpg", cell_type)
+        st.image(image, use_column_width=True, clamp=True)
     else:
         image = st_predict(f"storage/images/bloodcount/{image}.jpg", cell_type)
+        st.image(image, use_column_width=True, clamp=True)
 
     # convert array to cv2 image
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
