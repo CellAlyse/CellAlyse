@@ -102,6 +102,7 @@ def process(
     maxDist=0,
 ):
     if upload:
+        st.clear_cache()
         image = st_predict(f"{output_directory}/temp.jpg", cell_type)
         st.image(image, use_column_width=True, clamp=True)
     else:
