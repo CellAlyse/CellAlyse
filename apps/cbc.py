@@ -61,7 +61,8 @@ def cbc():
         image = st.file_uploader(
             "Bild hochladen", type=["jpg", "png", "jpeg", "tiff", "bmp"]
         )
-
+        st.cache_data.clear()
+        st.cache_resource.clear()
         if image is not None:
             prepare_upload(image)
             st.image(f"{output_directory}/temp.jpg", use_column_width=True)
@@ -102,7 +103,6 @@ def process(
     maxDist=0,
 ):
     if upload:
-        st.clear_cache()
         image = st_predict(f"{output_directory}/temp.jpg", cell_type)
         st.image(image, use_column_width=True, clamp=True)
     else:
