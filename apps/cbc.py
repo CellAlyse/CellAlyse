@@ -61,12 +61,13 @@ def cbc():
         image = st.file_uploader(
             "Bild hochladen", type=["jpg", "png", "jpeg", "tiff", "bmp"]
         )
-        st.cache_data.clear()
-        st.cache_resource.clear()
+
         if image is not None:
             prepare_upload(image)
             st.image(f"{output_directory}/temp.jpg", use_column_width=True)
             upload = True
+            st.cache_data.clear()
+            st.cache_resource.clear()
             # clear cache
             # st.experimental_memo.clear()
 
