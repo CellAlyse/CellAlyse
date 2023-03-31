@@ -87,7 +87,7 @@ def cbc():
 
     if st.button("Analyse starten") and image is not None:
         with st_lottie_spinner(lottie_progress, key="progress", loop=True):
-            edge_mask, circles = process(
+            edge_mask = process(
                 image,
                 cell_type,
                 cht,
