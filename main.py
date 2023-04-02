@@ -6,7 +6,6 @@ from apps.Analyse import analyse
 from apps.cbc import cbc
 from apps.home import home
 from apps.wbc import wbc
-from apps.folder import folder
 
 icon = Image.open("style/favicon.ico")
 st.set_page_config(
@@ -51,15 +50,14 @@ with st.sidebar:
     selected = option_menu(
         "Navigation",
         ["Home", "weiße Blutzellen", "Typisierung", "Analyse"],
-        icons=["house", "bar-chart-steps", "clipboard-data", "moisture",],
+        icons=["house", "bar-chart-steps", "clipboard-data", "moisture"],
         styles={
-            "icon": {"color": "#ff4b4b", "font-size": "20px"},
-            "nav-link-selected": {"background-color": "#262730"},
+            "icon": {"color": "#a9dc76", "font-size": "20px"},
+            "nav-link-selected": {"background-color": "#3d3b40"},
             "nav-link": {"font-size": "20px", "color": "#ffffff"},
         },
     )
 
-    # create a multi-page app the apps are in the apps folder
 if selected == "Typisierung":
     cbc()
 elif selected == "weiße Blutzellen":
@@ -68,5 +66,3 @@ elif selected == "Analyse":
     analyse()
 elif selected == "Home":
     home()
-# elif selected == "Ordner":
-#     folder()
