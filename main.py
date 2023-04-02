@@ -59,7 +59,6 @@ with st.sidebar:
         },
     )
 
-    # create a multi-page app the apps are in the apps folder
 if selected == "Typisierung":
     cbc()
 elif selected == "weiße Blutzellen":
