@@ -51,7 +51,6 @@ def cbc():
         minRadius = 28
         maxRadius = 55
         minDist = 33
-    st.sidebar.markdown("___")
 
 
     option = st.sidebar.selectbox("Upload oder Testbild?", ("Testbild", "Upload"))
