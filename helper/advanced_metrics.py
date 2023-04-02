@@ -5,6 +5,7 @@ from skimage import measure
 from scipy.ndimage import median_filter
 import numpy as np
 import streamlit as st
+import cv2
 
 def average_metrics(metrics):
     keys = metrics[0].keys()
@@ -44,25 +45,31 @@ def normalize_metrics(metrics):
 
 
 def compute_cell_metrics(mask, pixel_size, options):
+    # dilate the mask to get a better approximation of the cell boundary
+    mask = cv2.erode(mask, np.ones((3, 3), np.uint8), iterations=4)
+    # st.image(mask, caption="Dilated Mask", use_column_width=True)
+
+
     pixel_size = float(pixel_size)
 
     labeled_mask = label(mask)
 
     props = regionprops(labeled_mask)
 
+
     metrics = []
 
     for obj in props:
         area = obj.bbox_area
 
-        physical_area = area * pixel_size**2
+        physical_area = area
 
         centroid = np.array(obj.centroid) * pixel_size
 
         obj_metrics = {}
 
         if options[0]: # Fläche
-            obj_metrics['Fläche'] = physical_area
+            obj_metrics['Fläche'] = physical_area * pixel_size
 
         if options[1]: # Umfang
             obj_metrics['Umfang'] = obj.perimeter * pixel_size
