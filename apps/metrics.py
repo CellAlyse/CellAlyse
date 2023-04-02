@@ -30,7 +30,7 @@ def get_image():
         "Bild hochladen", type=["jpg", "png", "jpeg", "tiff", "bmp"]
     )
     if image is not None and st.button("Analyse starten"):
-        st.cache_data.clear()
+        # st.cache_data.clear()
         st.image(image, use_column_width=True, clamp=True)
         prepare_upload(image)
         mask = get_mask(f"{output_directory}/temp.jpg", "rbc")
@@ -63,15 +63,15 @@ def metric():
         metriken_L = metriken_L[(np.abs(stats.zscore(metriken_L)) < 3).all(axis=1)]
 
         normalized = normalize_metrics(metriken)
-        averages = average_metrics(metriken)
 
-        display_data(metriken_L, normalized, averages)
+        display_data(metriken_L, normalized)
 
-def display_data(metriken, normalized, averages):
+def display_data(metriken, normalized):
     data = export_data(metriken, normalized)
 
     st.subheader("Durchschnittswerte")
-    st.table(averages)
+    st.table(metriken.mean())
+
 
     st.subheader("Histogramm")
     st.bar_chart(metriken)
