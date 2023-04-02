@@ -51,11 +51,6 @@ def cbc():
         minRadius = 28
         maxRadius = 55
         minDist = 33
-
-    st.sidebar.markdown("# Weitere Optionen")
-    if st.sidebar.checkbox("Form berechnen"):
-        area=True
-        pixel_size = st.sidebar.text_input("Pixelgröße in µm", value=0.1)
     st.sidebar.markdown("___")
 
 
@@ -87,7 +82,7 @@ def cbc():
 
     if st.button("Analyse starten") and image is not None:
         with st_lottie_spinner(lottie_progress, key="progress", loop=True):
-            edge_mask, circles = process(
+            edge_mask= process(
                 image,
                 cell_type,
                 cht,
@@ -97,8 +92,6 @@ def cbc():
                 minRadius=minRadius,
                 maxRadius=maxRadius,
                 minDist=minDist,
-                area=area,
-                pixel_size=pixel_size,
                 old=model_old
             )
 def process(
@@ -112,8 +105,6 @@ def process(
     maxRadius=55,
     minDist=33,
     maxDist=0,
-    area=False,
-    pixel_size=0.5,
     old="Alt"
 ):
     if old == "Alt":
@@ -139,27 +130,15 @@ def process(
         dtype=cv2.CV_8U,
     )
     if cht:
-        cht_opt = hough_transform(
+        hough_transform(
             image, cell_type, minDist=minDist, maxRadius=maxRadius, minRadius=minRadius
         )
     if ccl:
         component_labeling(image)
     if distancetransform:
         threshold = stthreshold(image)
-        stcount(threshold, cell_type)
-    
-    if area:
-        image = stthreshold(image)
-        properties = compute_cell_metrics(image, pixel_size)
-
-        st.markdown("## Zellgrößen")
-        st.write(f"Größe der Zellen: {properties[0]}")
-
-        cells = properties[1]
-        dataframe = pd.DataFrame(cells, columns=["Zellgröße"])
-        st.dataframe(dataframe)
-    
-    return image, cht_opt
+        stcount(threshold, cell_type)   
+    return image
 
 def compute_cell_metrics(mask, pixel_size):
     num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(mask.astype(np.uint8))
