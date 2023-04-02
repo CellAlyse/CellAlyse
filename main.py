@@ -54,7 +54,7 @@ with st.sidebar:
         icons=["house", "bar-chart-steps", "clipboard-data", "moisture",],
         styles={
             "icon": {"color": "#a9dc76", "font-size": "20px"},
-            "nav-link-selected": {"background-color": "#3d3b40"},
+            "nav-link-selected": {"background-color": "#0e1117"},
             "nav-link": {"font-size": "20px", "color": "#ffffff"},
         },
     )
