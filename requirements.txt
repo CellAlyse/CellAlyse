@@ -20,3 +20,4 @@ ipython
 pythreejs
 scikit-learn
 stpyvista
+plotly
