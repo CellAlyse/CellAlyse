@@ -11,7 +11,7 @@ from helper.functions import prepare_upload
 from helper.advanced_metrics import *
 
 def create_Layout():
-    metrics = ["Fläche","Umfang", "Durchmesser", "Orientierung", "Exzentrizität", "Abweichungen", "Varianzen"]
+    metrics = ["Fläche","Umfang", "Durchmesser", "Orientierung", "Exzentrizität"]
     pixelProPicoMeter = st.sidebar.text_input("Pixelgröße in µm", value=0.1)
     metrics = [st.sidebar.checkbox(metric, value=True) for metric in metrics]
     metrics.append(pixelProPicoMeter)
