@@ -23,7 +23,7 @@ def cbc():
         "", ("rote Blutzellen", "weiße Blutzelle", "Plättchen")
     )
 
-    model_old = "Alt"
+    model_old = st.sidebar.selectbox("Modell", ("Alt", "Neu"))
 
     if cell_type == "rote Blutzellen":
         cell_type = "rbc"
@@ -87,7 +87,7 @@ def cbc():
 
     if st.button("Analyse starten") and image is not None:
         with st_lottie_spinner(lottie_progress, key="progress", loop=True):
-            edge_mask = process(
+            edge_mask, circles = process(
                 image,
                 cell_type,
                 cht,
@@ -139,7 +139,7 @@ def process(
         dtype=cv2.CV_8U,
     )
     if cht:
-        hough_transform(
+        cht_opt = hough_transform(
             image, cell_type, minDist=minDist, maxRadius=maxRadius, minRadius=minRadius
         )
     if ccl:
@@ -159,8 +159,7 @@ def process(
         dataframe = pd.DataFrame(cells, columns=["Zellgröße"])
         st.dataframe(dataframe)
     
-    return image
-
+    return image, cht_opt
 
 def compute_cell_metrics(mask, pixel_size):
     num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(mask.astype(np.uint8))
@@ -176,7 +175,7 @@ def compute_cell_metrics(mask, pixel_size):
         area = stats[label, cv2.CC_STAT_AREA]
         label_dist_transform = label_mask * dist_transform
 
-        avg_size = np.sum(label_dist_transform) * pixel_size / area
+        avg_size = np.sum(label_dist_transform) * float(pixel_size) / area
         avg_sizes.append(avg_size)
         cell_sizes.append(int(area * pixel_size ** 2))
 
@@ -184,7 +183,11 @@ def compute_cell_metrics(mask, pixel_size):
         avg_perimeter = perimeter * pixel_size / area
         avg_perimeters.append(avg_perimeter)
 
-    avg_size = np.mean(avg_sizes)
+    print('label_dist_transform:', label_dist_transform.shape, label_dist_transform.dtype)
+    print('pixel_size:', pixel_size, type(pixel_size))
+    print('area:', area, type(area))
+
+    avg_size = np.sum(label_dist_transform) * float(pixel_size) / area
     avg_perimeter = np.mean(avg_perimeters)
     std_size = np.std(cell_sizes)
     std_perimeter = np.std(avg_perimeters)
