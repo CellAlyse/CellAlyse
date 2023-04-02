@@ -53,8 +53,8 @@ with st.sidebar:
         ["Home", "weiße Blutzellen", "Typisierung", "Analyse"],
         icons=["house", "bar-chart-steps", "clipboard-data", "moisture",],
         styles={
-            "icon": {"color": "#a9dc76", "font-size": "20px"},
-            "nav-link-selected": {"background-color": "#0e1117"},
+            "icon": {"color": "#ff4b4b", "font-size": "20px"},
+            "nav-link-selected": {"background-color": "#262730"},
             "nav-link": {"font-size": "20px", "color": "#ffffff"},
         },
     )
