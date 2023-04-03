@@ -123,4 +123,7 @@ headless = false
 > If you'd like to add you module, edit the entry file `main.py` and import your **entry function**.
 > To create a module edit the selection bar (The used Component can be found here: https://github.com/victoryhb/streamlit-option-menu 
 
+*I want to use the Cell-U-Net*
+> Due to the limitations of the streamlit community cloud a simple model has been used.
+> The Cell-U-Net .h5 can be downloaded here https://drive.google.com/file/d/18l18n1g5E5Dl3CxOsrC9BP9rKcsyRH2K/view?usp=sharing
 
