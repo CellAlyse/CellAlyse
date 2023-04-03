@@ -51,6 +51,7 @@ def compute_cell_metrics(mask, pixel_size, options):
 
 
     pixel_size = float(pixel_size)
+    conversion_factor = pixel_size ** 2
 
     labeled_mask = label(mask)
 
@@ -69,7 +70,7 @@ def compute_cell_metrics(mask, pixel_size, options):
         obj_metrics = {}
 
         if options[0]: # Fläche
-            obj_metrics['Fläche'] = physical_area * pixel_size
+            obj_metrics['Fläche'] = physical_area * conversion_factor
 
         if options[1]: # Umfang
             obj_metrics['Umfang'] = obj.perimeter * pixel_size
