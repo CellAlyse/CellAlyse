@@ -32,6 +32,7 @@ wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge
 bash Miniforge-pypy3-Linux-aarch64.sh
 ```
 **follow the setup process**
+
 *If the enviorment is not working after rebooting run the command with the -u argument*
 
 #### Installing tensorlfow 2.x
