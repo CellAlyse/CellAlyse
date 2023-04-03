@@ -127,3 +127,8 @@ headless = false
 > Due to the limitations of the streamlit community cloud a simple model has been used.
 > The Cell-U-Net .h5 can be downloaded here https://drive.google.com/file/d/18l18n1g5E5Dl3CxOsrC9BP9rKcsyRH2K/view?usp=sharing
 
+*I want to use my own dataset*
+> You can exchange the image file in `storage/BCCD/*` or create your own folder.
+> The images are loaded using the `dataset_prediction` function in `helper/svm.py`
+> You need to edit the image type and the **ground_truth.json** or delete it, if not present
+
