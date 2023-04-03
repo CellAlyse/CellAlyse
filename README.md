@@ -122,7 +122,12 @@ headless = false
 > If you'd like to add your own method, you have to put all the logic into the `helper/` directory.
 > In `apps/` you'll have to create an entry function and functions for the logic (i.e predictions, rendering output, handling input logic).
 > If you'd like to add you module, edit the entry file `main.py` and import your **entry function**.
-> To create a module edit the selection bar (The used Component can be found here: https://github.com/victoryhb/streamlit-option-menu 
+> To create a module edit the selection bar (The used Component can be found here: https://github.com/victoryhb/streamlit-option-menu)
+
+*I need to add a custom component*
+> If the component is developed by yourself, you need to add it into the `app` directory. 
+> Note that there is already a custom component for the CellAlyse ui. Just add your main.js or rename it. You can also store global
+> styles in the  `styles/` directory.
 
 *I want to use the Cell-U-Net*
 > Due to the limitations of the streamlit community cloud a simple model has been used.
