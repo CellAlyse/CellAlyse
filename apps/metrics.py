@@ -18,7 +18,10 @@ def load_lottifile(filepath: str):
 
 def create_Layout():
     metrics = ["Fläche","Umfang", "Durchmesser", "Orientierung", "Exzentrizität"]
-    pixelProPicoMeter = st.sidebar.text_input("Pixelgröße in µm", value=0.07)
+    pixelProPicoMeter = st.sidebar.text_input("Pixelgröße in µm", value=0.092)
+    if pixelProPicoMeter != 0.092:
+        st.warning("Bitte verifizieren Sie ihren Wert: https://github.com/CellAlyse/Demo-Website/blob/main/Usage.md")
+        st.warning("pixel pro µm ist der Mittelwert aller All-IDB Bilder")
     metrics = [st.sidebar.checkbox(metric, value=True) for metric in metrics]
     metrics.append(pixelProPicoMeter)
     return metrics
