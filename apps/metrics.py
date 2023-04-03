@@ -41,7 +41,7 @@ def get_image():
         "Bild hochladen", type=["jpg", "png", "jpeg", "tiff", "bmp"]
     )
     if image is not None and st.button("Analyse starten"):
-        # st.cache_data.clear()
+        st.cache_data.clear()
         st.image(image, use_column_width=True, clamp=True)
         prepare_upload(image)
         mask = get_mask(f"{output_directory}/temp.jpg", "rbc")
