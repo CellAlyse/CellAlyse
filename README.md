@@ -3,14 +3,14 @@
 ## Setting up the Enviorment
 
 
-## Conda
+### Conda
 ```bash
 conda create -n "CellAlyse" python=3.9 -y
 conda activate CellAlyse 
 pip install -r requirements.txt
 ```
 
-## venv
+### venv
 **Note that the Website only works with python 3.9**
 ```bash
 python -m venv CellAlyse
@@ -18,7 +18,7 @@ source CellAlyse/bin/activate
 pip install -r requirements.txt
 ```
 
-## Running the Website
+### Running the Website
 ```bash
 streamlit run main.py
 ```
