@@ -114,6 +114,11 @@ headless = false
     └── tmp
         └── r.md
 ```
+*Where is the full Website*
+> The full Website can't be published because it has to be used on real patients data.
+> The code will be published, when the CellAlyse microscope is finilized. If needed you can always contact us under https://cellalyse.bio.link/
+
+
 *Why is there a tmp directory?*
 > It's for converting streamlits stream objects into np arrays.
 > You can also add plt.imsave statements after every predictions or succesful count. This is how the figures of our report were created :)
