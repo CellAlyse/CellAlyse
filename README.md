@@ -116,5 +116,10 @@ headless = false
 *Why is there a tmp directory?*
 > It's for converting streamlits stream objects into np arrays.
 > You can also add plt.imsave statements after every predictions or succesful count. This is how the figures of our report were created :)
+*How can I contribute?*
+> If you'd like to add your own method, you have to put all the logic into the `helper/` directory.
+> In `apps/` you'll have to create an entry function and functions for the logic (i.e predictions, rendering output, handling input logic).
+> If you'd like to add you module, edit the entry file `main.py` and import your **entry function**.
+> To create a module edit the selection bar (The used Component can be found here: https://github.com/victoryhb/streamlit-option-menu 
 
 
