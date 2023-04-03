@@ -30,7 +30,7 @@ def create_Layout():
 def get_mask(image, cell_type):
     lottie_progress = load_lottifile("style/138949-analysis-bar-with-text.json")
     with st_lottie_spinner(lottie_progress, key="progress"):
-        if cell_type is "rbc" or "plt":
+        if cell_type in ["rbc", "plt"]:
             mask = st_predict(image, cell_type)
         else:
             mask = segmentation(image)
