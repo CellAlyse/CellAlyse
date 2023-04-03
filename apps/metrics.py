@@ -1,14 +1,20 @@
 import base64
-
+import json
 import stack_data
 from PIL import Image
 import plotly.express as px
 from scipy.stats import stats
+from streamlit_lottie import st_lottie_spinner
 
 from helper.svm import segmentation
 from helper.model import *
 from helper.functions import prepare_upload
 from helper.advanced_metrics import *
+
+
+def load_lottifile(filepath: str):
+    with open(filepath) as f:
+        return json.load(f)
 
 def create_Layout():
     metrics = ["Fläche","Umfang", "Durchmesser", "Orientierung", "Exzentrizität"]
@@ -19,10 +25,12 @@ def create_Layout():
 
 
 def get_mask(image, cell_type):
-    if cell_type is "rbc" or "plt":
-        mask = st_predict(image, cell_type)
-    else:
-        mask = segmentation(image)
+    lottie_progress = load_lottifile("style/138949-analysis-bar-with-text.json")
+    with st_lottie_spinner(lottie_progress, key="progress"):
+        if cell_type is "rbc" or "plt":
+            mask = st_predict(image, cell_type)
+        else:
+            mask = segmentation(image)
     return mask
 
 def get_image():
@@ -54,6 +62,7 @@ def export_data(metriken, normalized):
     metriken = metriken.to_csv(index=False)
     normalized = normalized.to_csv(index=False)
     return metriken, normalized
+
 def metric():
     metrics = create_Layout()
     mask = get_image()
