@@ -66,4 +66,55 @@ If you don't won't to open a new window after every run (headless), you can edit
 headless = false
 ```
 
+## Website tree
+```
+.
+├── apps
+│   ├── Analyse.py
+│   ├── cbc.py
+│   ├── folder.py
+│   ├── home.py
+│   ├── metrics.py
+│   ├── render.py
+│   └── wbc.py
+├── helper
+│   ├── advanced_metrics.py
+│   ├── functions.py
+│   ├── model.py
+│   └── svm.py
+├── main.py
+├── packages.txt
+├── README.md
+├── requirements.txt
+└── storage
+    ├── images
+    │   ├── bloodcount
+    │   ├── classification
+    │   │   ├── BCCD.pkl
+    │   │   ├── LISC.pkl
+    │   │   └── Raabin.pkl
+    │   └── media
+    │       ├── dataset.gif
+    │       ├── RBC.gif
+    │       └── WBC.gif
+    ├── models
+    │   ├── nn
+    │   │   ├── plt.h5
+    │   │   ├── rbc.h5
+    │   │   └── wbc.h5
+    │   └── svm
+    │       ├── BCCD.pkl
+    │       ├── BCCD_train.npy
+    │       ├── LISC.pkl
+    │       ├── LISC_train.npy
+    │       ├── Raabin.pkl
+    │       ├── Raabin_train.npy
+    │       └── x_train.npy
+    └── tmp
+        └── r.md
+```
+*Why is there a tmp directory?*
+> It's for converting streamlits stream objects into np arrays.
+> You can also add plt.imsave statements after every predictions or succesful count. This is how the figures of our report were created :)
+
 
