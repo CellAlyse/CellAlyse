@@ -11,11 +11,9 @@ from tensorflow.keras import backend as K
 from skimage.feature import peak_local_max
 from scipy import ndimage
 import streamlit as st
-# Set the number of threads to use for parallelism
 tf.config.threading.set_inter_op_parallelism_threads(6)
 tf.config.threading.set_intra_op_parallelism_threads(6)
 
-# optimise tensorflow
 tf.config.optimizer.set_jit(True)
 
 input_shape = (188, 188, 3)
