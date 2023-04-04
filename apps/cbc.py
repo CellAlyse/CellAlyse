@@ -23,7 +23,7 @@ def cbc():
         "", ("rote Blutzellen", "weiße Blutzelle", "Plättchen")
     )
 
-    model_old = st.sidebar.selectbox("Modell", ("Alt", "Neu"))
+    model_old = "Alt"
 
     if cell_type == "rote Blutzellen":
         cell_type = "rbc"
