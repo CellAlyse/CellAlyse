@@ -50,8 +50,8 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 with st.sidebar:
     selected = option_menu(
         "Navigation",
-        ["Home", "weiße Blutzellen", "Typisierung", "Analyse", "Metriken"],
-        icons=["house", "bar-chart-steps", "clipboard-data", "moisture", "clipboard"],
+        ["Home", "weiße Blutzellen", "Typisierung", "Datensatz", "Analyse"],
+        icons=["house", "bar-chart-steps", "clipboard-data", "clipboard", "moisture"],
         styles={
             "icon": {"color": "#a9dc76", "font-size": "20px"},
             "nav-link-selected": {"background-color": "#3d3b40"},
@@ -63,9 +63,9 @@ if selected == "Typisierung":
     cbc()
 elif selected == "weiße Blutzellen":
     wbc()
-elif selected == "Analyse":
+elif selected == "Datensatz":
     analyse()
 elif selected == "Home":
     home()
-elif selected == "Metriken":
+elif selected == "Analyse":
     metric()
