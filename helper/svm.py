@@ -12,6 +12,7 @@ import streamlit as st
 from scipy.spatial import ConvexHull
 from skimage import filters as fl
 from skimage import morphology
+from helper.advanced_metrics import *
 from scipy.ndimage.morphology import binary_dilation, binary_fill_holes
 from scipy import ndimage
 from matplotlib import pyplot as plt
@@ -546,3 +547,45 @@ def count_granules(nucleus):
     num_granules = sum(stats[1:, 4] > min_area)
     
     return num_granules
+
+
+def compute_wbc_metrics(mask, pixel_size):
+    #st.image(mask, caption="Original", use_column_width=True)
+    mask = remove_small_objects(mask, 0.2)
+    #st.image(mask, caption="Removed Small Objects", use_column_width=True)
+
+
+    pixel_size = float(pixel_size)
+    conversion_factor = pixel_size ** 2
+
+    labeled_mask = label(mask)
+
+    props = regionprops(labeled_mask)
+
+
+    metrics = []
+
+    for obj in props:
+        area = obj.bbox_area
+
+        physical_area = area
+
+        centroid = np.array(obj.centroid) * pixel_size
+
+        obj_metrics = {}
+
+        obj_metrics['Fläche'] = physical_area * conversion_factor
+
+        obj_metrics['Umfang'] = obj.perimeter * pixel_size
+
+        obj_metrics['Durchmesser'] = obj.equivalent_diameter * pixel_size
+
+        obj_metrics['Exzentrizität'] = obj.eccentricity
+
+        #obj_metrics['Zentrum'] = centroid
+
+        obj_metrics['Formfaktor'] = obj.solidity
+
+        metrics.append(obj_metrics)
+
+    return metrics
