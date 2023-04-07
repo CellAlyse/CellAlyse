@@ -12,3 +12,7 @@ To obtaion the actual area I've introduced the `pixel pro µm` unit.
 ```python
 int distance = (int) Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 ```
+
+*Calculating `pixel pro µm` using the website*
+> Set pixel pro µm to 1.0 and upload an calibration image (std. diameter and **shape**). Divide the expected diameter with the diameter in pixel.
+> If you don't have a normal cell, be aware that the main axis will be used.
