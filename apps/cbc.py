@@ -20,7 +20,6 @@ def cbc():
     # Load lottie progress bar
     lottie_progress = load_lottifile("style/87081-blood-cell-morph.json")
 
-    # Initialize variables
     area, pixel_size = False, 0.5
     cell_types = {
         "rote Blutzellen": "rbc",
