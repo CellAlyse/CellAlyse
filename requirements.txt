@@ -1,5 +1,5 @@
 altair==4.1.0
-joblib==1.1.1
+joblib==1.2.0
 matplotlib==3.6.3
 numpy==1.23.5
 opencv_python==4.7.0.68
