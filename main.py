@@ -6,6 +6,7 @@ from apps.Analyse import analyse
 from apps.cbc import cbc
 from apps.home import home
 from apps.wbc import wbc
+from apps.folder import folder
 from apps.metrics import metric
 
 icon = Image.open("style/favicon.ico")
@@ -50,8 +51,8 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 with st.sidebar:
     selected = option_menu(
         "Navigation",
-        ["Home", "weiße Blutzellen", "Typisierung", "Datensatz", "Analyse"],
-        icons=["house", "bar-chart-steps", "clipboard-data", "clipboard", "moisture"],
+        ["Home", "weiße Blutzellen", "Typisierung","Datensatz", "Analyse", "Metriken"],
+        icons=["house", "bar-chart-steps", "clipboard-data", "archive" ,"moisture", "clipboard"],
         styles={
             "icon": {"color": "#a9dc76", "font-size": "20px"},
             "nav-link-selected": {"background-color": "#3d3b40"},
@@ -63,9 +64,11 @@ if selected == "Typisierung":
     cbc()
 elif selected == "weiße Blutzellen":
     wbc()
-elif selected == "Datensatz":
-    analyse()
-elif selected == "Home":
-    home()
 elif selected == "Analyse":
     metric()
+elif selected == "Home":
+    home()
+elif selected == "Metriken":
+    folder()
+elif selected == "Datensatz":
+    analyse()
