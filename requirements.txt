@@ -15,7 +15,7 @@ streamlit
 streamlit_cropper
 streamlit_lottie
 streamlit_option_menu
-tensorflow==2.11.1
+tensorflow==2.9.0
 ipython
 pythreejs
 scikit-learn
