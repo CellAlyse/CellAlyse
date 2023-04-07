@@ -5,7 +5,6 @@ import streamlit as st
 from streamlit_lottie import st_lottie_spinner
 import pandas as pd
 from skimage.transform import probabilistic_hough_line
-from pyswarm import pso
 import random
 
 from helper.functions import *
