@@ -11,9 +11,11 @@ from tensorflow.keras import backend as K
 from skimage.feature import peak_local_max
 from scipy import ndimage
 import streamlit as st
+# Set the number of threads to use for parallelism
 tf.config.threading.set_inter_op_parallelism_threads(6)
 tf.config.threading.set_intra_op_parallelism_threads(6)
 
+# optimise tensorflow
 tf.config.optimizer.set_jit(True)
 
 input_shape = (188, 188, 3)
@@ -291,6 +293,7 @@ def concat(imgs):
     """
     return cv2.vconcat([cv2.hconcat(im_list) for im_list in imgs[:, :, :, :]])
 
+@st.cache_data
 def st_predict(img="images/Bild1.jpg", cell_type="rbc", old=True):
     """
     Segmentiere das Bild mit aktuell NUR U-NET.
@@ -339,21 +342,19 @@ def st_predict(img="images/Bild1.jpg", cell_type="rbc", old=True):
 
     # Lösche unnötige Dimensionen/Informationen
     new_mask_chips = reshape(new_mask_chips, dimensions[0], dimensions[1])
-    if cell_type == "rbc":
-        new_edge_chips = reshape(new_edge_chips, dimensions[0], dimensions[1])
+
 
     # Zusammensetzen der Chips
     new_mask_chips = np.squeeze(new_mask_chips)
-    if cell_type == "rbc":
-        new_edge_chips = np.squeeze(new_edge_chips)
 
     # Verbinde zu einem Vollbild
     new_mask = concat(new_mask_chips)
-    if cell_type == "rbc":
-        new_edge = concat(new_edge_chips)
     if cell_type != "rbc":
         return new_mask
     else:
+        new_edge_chips = reshape(new_edge_chips, dimensions[0], dimensions[1])
+        new_edge_chips = np.squeeze(new_edge_chips)
+        new_edge = concat(new_edge_chips)
         return new_mask - new_edge
 
 def stthreshold(img="edge.png", cell_type="rbc"):
@@ -372,15 +373,17 @@ def hough_transform(
     param1=30,
     param2=20,
 ):
+    # Load the image
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
     if cell_type == "rbc":
         circles = cv2.HoughCircles(
             img,
             cv2.HOUGH_GRADIENT,
             1,
             minDist=minDist,
-            maxRadius=maxRadius,
-            minRadius=minRadius,
+            maxRadius=int(maxRadius),
+            minRadius=int(minRadius),
             param1=param1,
             param2=param2,
         )
@@ -390,24 +393,25 @@ def hough_transform(
             cv2.HOUGH_GRADIENT,
             1,
             minDist=minDist,
-            maxRadius=maxRadius,
-            minRadius=minRadius,
+            maxRadius=int(maxRadius),
+            minRadius=int(minRadius),
             param1=param1,
             param2=param2,
         )
     output = img.copy()
+    
 
     if circles is not None:
         circles = np.round(circles[0, :]).astype("int")
         for (x, y, r) in circles:
-            cv2.circle(output, (x, y), r, (0, 0, 255), 2)
+            cv2.circle(output, (x, y), r, (0, 255), 2)
             cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 0, 255), -1)
-        
-    # print(f'Hough transform: {len(circles)}')
 
-    st.write(f"Hough transform: {len(circles)}")
-    st.image(output, caption="Hough Transform", use_column_width=True)
-    return output
+        # output = cv2.cvtColor(output, cv2.COLOR_HSV2BGR)
+        return output, len(circles)
+    else:
+        # output = cv2.cvtColor(output, cv2.COLOR_HSV2BGR)
+        return output, 0
 
 
 def component_labeling(img="edge.png"):
@@ -438,7 +442,7 @@ def stcount(img="threshold_mask.png", cell_type="rbc"):
         exclude_border = True
     elif cell_type == "wbc":
         min_distance = 61
-        threshold_abs = 28
+        threshold_abs = 20
         exclude_border = False
     elif cell_type == "plt":
         min_distance = 20
