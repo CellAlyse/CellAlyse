@@ -1,6 +1,6 @@
 # Website
 
-## Setting up the Enviorment
+## Setting up the Enviornment
 
 
 ### Conda
