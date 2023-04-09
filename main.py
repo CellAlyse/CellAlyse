@@ -49,6 +49,7 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 ##st.markdown('<style>' + open('style/style.css').read() + '</style>', unsafe_allow_html=True)
 with st.sidebar:
+    st.sidebar.warning("Die neuen Modelle für die Klassifizierung werden bald hochgeladen. Neue Hyperparameter und besser angepasste Eigenschaften werden kommen :)")
     selected = option_menu(
         "Navigation",
         ["Home", "weiße Blutzellen", "Typisierung","Datensatz", "Analyse", "Metriken"],
