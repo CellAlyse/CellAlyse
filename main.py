@@ -67,7 +67,7 @@ elif selected == "weiße Blutzellen":
 elif selected == "Analyse":
     metric()
 elif selected == "Home":
-    st.sidebar.warning("Die neuen Modelle für die Klassifizierung werden bald hochgeladen. Neue Hyperparameter und besser angepasste Eigenschaften werden kommen :)")
+    st.sidebar.warning("Die neuen Modelle werden nach dem Abi hochgeladen. Dann kommt auch das Floureszenz Modul :)")
     home()
 elif selected == "Metriken":
     folder()
