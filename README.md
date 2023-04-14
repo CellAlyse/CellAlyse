@@ -35,7 +35,7 @@ bash Miniforge-pypy3-Linux-aarch64.sh
 
 *If the enviorment is not working after rebooting run the command with the -u argument*
 
-#### Installing tensorlfow 2.x
+#### Installing tensorflow 2.x
 ```bash
 conda create -n "CellAlyse" python=3.7 -y
 conda activate CellAlyse
