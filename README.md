@@ -39,6 +39,7 @@ bash Miniforge-pypy3-Linux-aarch64.sh
 ```bash
 conda create -n "CellAlyse" python=3.7 -y
 conda activate CellAlyse
+```
 ```bash
 sudo apt-get update
 sudo apt-get upgrade
