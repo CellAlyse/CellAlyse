@@ -42,8 +42,8 @@ def cbc():
     cell_type = st.sidebar.selectbox("", list(cell_types.keys()))
     cell_type = cell_types[cell_type]
 
-    model_type = st.sidebar.selectbox("Modell", ("Alt", "Neu"))
-
+    #model_type = st.sidebar.selectbox("Modell", ("Alt", "Neu"))
+    model_type = "Alt"
     st.sidebar.markdown("___")
     st.sidebar.markdown("# Methoden")
     method_checkboxes = {}
