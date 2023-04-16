@@ -73,4 +73,5 @@ elif selected == "Metriken":
     folder()
 elif selected == "Datensatz":
     analyse()
-
+elif selected == "Floureszenz":
+    main()
