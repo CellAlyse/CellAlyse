@@ -74,4 +74,4 @@ elif selected == "Metriken":
 elif selected == "Datensatz":
     analyse()
 elif selected == "Floureszenz":
-    main()
+    st.write("Bald")
