@@ -18,7 +18,7 @@ from config import config_vars
 
 def setup(config_vars=None):
     partition = "validation"
-    experiment_name = 'fixed_att_SWnet'
+    experiment_name = 'cell_u_net'
     config_vars = utils.dirtools.setup_experiment(config_vars, experiment_name)
     data_partitions = utils.dirtools.read_data_partitions(config_vars)
 
