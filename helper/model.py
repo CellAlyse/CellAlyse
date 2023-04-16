@@ -293,7 +293,6 @@ def concat(imgs):
     """
     return cv2.vconcat([cv2.hconcat(im_list) for im_list in imgs[:, :, :, :]])
 
-@st.cache_data
 def st_predict(img="images/Bild1.jpg", cell_type="rbc", old=True):
     """
     Segmentiere das Bild mit aktuell NUR U-NET.
