@@ -1,8 +1,26 @@
 import streamlit as st
-
+from news.render import main
+from streamlit_option_menu import option_menu
 
 
 def home():
+    selected = option_menu(
+        "",
+        ["Home", "Neuigkeiten"],
+        icons=["house", "newspaper"],
+        orientation="horizontal",
+        styles={
+            "icon": {"color": "#a9dc76", "font-size": "20px"},
+            "nav-link-selected": {"background-color": "#3d3b40"},
+            "nav-link": {"font-size": "20px", "color": "#ffffff"},
+        },
+
+    )
+    if selected == "Home":
+        render_home()
+    elif selected == "Neuigkeiten":
+        main()
+def render_home():
     st.markdown("# Was ist CellAlyse")
     st.markdown("Mit CellAlyse können Blutzellen mit leichtigkeit gezählt werden. Die Automatisierung der Zählung spart Zeit, reduziert Fehler und ermöglicht eine bessere Diagnose.")
 
