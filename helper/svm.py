@@ -296,15 +296,15 @@ def feature_extractor(img, min_area=100):
                 ROC_pxls_Value[ch, p_roc] = ALL_Channels[ch][row, col]
                 p_roc += 1
 
-    Ncl_mean_std = np.zeros(shape=(len(ALL_Channels), 2), dtype=np.float)
+    Ncl_mean_std = np.zeros(shape=(len(ALL_Channels), 2), dtype=np.float64)
     Ncl_mean_std[:, 0] = np.mean(NCL_pxls_value, axis=1)
     Ncl_mean_std[:, 1] = np.std(NCL_pxls_value, axis=1)
 
-    Cvx_mean_std = np.zeros(shape=(len(ALL_Channels), 2), dtype=np.float)
+    Cvx_mean_std = np.zeros(shape=(len(ALL_Channels), 2), dtype=np.float64)
     Cvx_mean_std[:, 0] = np.mean(CVX_pxls_Value, axis=1)
     Cvx_mean_std[:, 1] = np.std(CVX_pxls_Value, axis=1)
 
-    Roc_mean_std = np.zeros(shape=(len(ALL_Channels), 2), dtype=np.float)
+    Roc_mean_std = np.zeros(shape=(len(ALL_Channels), 2), dtype=np.float64)
     Roc_mean_std[:, 0] = np.mean(ROC_pxls_Value, axis=1)
     Roc_mean_std[:, 1] = np.std(ROC_pxls_Value, axis=1)
 
