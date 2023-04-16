@@ -16,8 +16,8 @@ streamlit_cropper==0.2.1
 streamlit_lottie==0.0.3
 streamlit_option_menu==0.3.2
 tensorflow==2.9.0
+scikit-learn==1.0.2
 ipython
 pythreejs
-scikit-learn
 stpyvista
 plotly
