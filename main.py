@@ -8,6 +8,7 @@ from apps.home import home
 from apps.wbc import wbc
 from apps.folder import folder
 from apps.metrics import metric
+from apps.flourme import main
 
 icon = Image.open("style/favicon.ico")
 st.set_page_config(
@@ -51,8 +52,8 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 with st.sidebar:
     selected = option_menu(
         "Navigation",
-        ["Home", "weiße Blutzellen", "Typisierung","Datensatz", "Analyse", "Metriken"],
-        icons=["house", "bar-chart-steps", "clipboard-data", "archive" ,"moisture", "clipboard"],
+        ["Home", "weiße Blutzellen", "Typisierung","Datensatz", "Analyse", "Metriken", "Floureszenz"],
+        icons=["house", "bar-chart-steps", "clipboard-data", "archive" ,"moisture", "clipboard", "sunrise"],
         styles={
             "icon": {"color": "#a9dc76", "font-size": "20px"},
             "nav-link-selected": {"background-color": "#3d3b40"},
@@ -67,9 +68,10 @@ elif selected == "weiße Blutzellen":
 elif selected == "Analyse":
     metric()
 elif selected == "Home":
-    st.sidebar.warning("Die neuen Modelle werden nach dem Abi hochgeladen. Dann kommt auch das Floureszenz Modul :)")
     home()
 elif selected == "Metriken":
     folder()
 elif selected == "Datensatz":
     analyse()
+elif selected == "Floureszenz":
+    main()
