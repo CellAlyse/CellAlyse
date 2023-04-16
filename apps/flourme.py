@@ -35,7 +35,7 @@ def predict(image):
 
         images = images / 255
 
-        model = utils.fixed_att_SWnet_v3.get_model_3_class(dim1, dim2)
+        model = utils.cell_u_net.get_model_3_class(dim1, dim2)
 
         model.load_weights("models/model.hdf5")
         model.summary()
