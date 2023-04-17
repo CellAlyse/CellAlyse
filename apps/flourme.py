@@ -8,6 +8,7 @@ import numpy as np
 import skimage.io
 import skimage.morphology
 
+import cv2
 import tensorflow as tf
 import keras
 
@@ -22,6 +23,13 @@ def setup(config_vars=None):
     config_vars = utils.dirtools.setup_experiment(config_vars, experiment_name)
     data_partitions = utils.dirtools.read_data_partitions(config_vars)
 
+@st.cache_resource
+def load_cell_u_net(dim1=512, dim2=512):
+        model = utils.cell_u_net.get_model_3_class(dim1, dim2)
+
+        model.load_weights("models/model.hdf5")
+        return model
+
 def predict(image):
         global probmap, pred, label
 
@@ -35,9 +43,7 @@ def predict(image):
 
         images = images / 255
 
-        model = utils.cell_u_net.get_model_3_class(dim1, dim2)
-
-        model.load_weights("models/model.hdf5")
+        model = load_cell_u_net(dim1=dim1, dim2=dim2)
         model.summary()
         predictions = model.predict(images, batch_size=1)
         print(f"Länge: {len(images)}")
@@ -67,9 +73,13 @@ def main():
 
         if st.button("Analyse"):
             probmap, pred, label = predict(image_path)
+            
+            label = skimage.color.label2rgb(label, bg_label=0)
+
+            st.image(label)
             st.image(Image.open("storage/tmp/pred/tmp.png"), clamp=True)
             st.image(probmap)
-            st.image(label)
+            
 
             for file in os.listdir("storage/tmp"):
                 if os.path.isfile(os.path.join("tmp", file)):
