@@ -299,7 +299,7 @@ def st_predict(img="images/Bild1.jpg", cell_type="rbc", old=True):
     :param img --> Das Bild, das segmentiert werden soll
     :param plot_blocks --> Whether to plot the feature maps of each block in the U-Net
 
-    :return --> Das bild wird im Output Ordner gespeichertÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
+    :return --> Das bild wird im Output Ordner gespeichert
     """
 
     test_img = sorted(glob.glob(img))
