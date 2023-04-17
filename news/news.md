@@ -22,7 +22,8 @@ Parameter bestimmt wurden.
 
 ### Die neuen Modelle
 LISC und BCCD sind schon fertig implementiert. Da die Hyperparameter auf Raabin bestimmt werden,
-wird es noch etwas dauernd sein, bis die Modelle fertig sind.
+wird es noch etwas dauern bis die Modelle fertig sind. LISC und BCCDD funktionieren gut, was ein gutes
+Zeichen ist.
 
 ### Floureszenz
 Das Cell-U-Net ist auf dem BBBC-Datensatz trainiert worden und erreicht sogar sehr gute 
