@@ -168,11 +168,11 @@ def feature_extractor(img, min_area=100):
     # save image
     a_temp = np.where(_K < _M, _K, _M)
     KM = _K - a_temp
-    cv2.imwrite("KM.png", KM)
+    #cv2.imwrite("KM.png", KM)
     b_temp = np.where(min_MS < KM, min_MS, KM)
-    cv2.imwrite("min_MS_KM.png", b_temp)
+    #cv2.imwrite("min_MS_KM.png", b_temp)
     min_MS_KM = min_MS - b_temp
-    cv2.imwrite("min_MSsubKM.png", min_MS_KM)
+    #cv2.imwrite("min_MSsubKM.png", min_MS_KM)
 
     #    cv2.imshow('Step 1' , cv2.resize(Nucleus_img , (256 ,256)))
 
