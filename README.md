@@ -135,9 +135,6 @@ headless = false
 > Note that there is already a custom component for the CellAlyse ui. Just add your main.js or rename it. You can also store global
 > styles in the  `styles/` directory.
 
-*I want to use the Cell-U-Net*
-> Due to the limitations of the streamlit community cloud a simple model has been used.
-> The Cell-U-Net .h5 can be downloaded here https://drive.google.com/file/d/18l18n1g5E5Dl3CxOsrC9BP9rKcsyRH2K/view?usp=sharing
 
 *I want to use my own dataset*
 > You can exchange the image file in `storage/BCCD/*` or create your own folder.
