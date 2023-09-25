@@ -1,4 +1,5 @@
 altair==4.1.0
+tensorflow==2.9.0
 protobuf==3.20.1
 joblib==1.1.1
 matplotlib==3.6.3
@@ -16,7 +17,6 @@ streamlit==1.18
 streamlit_cropper==0.2.1
 streamlit_lottie==0.0.3
 streamlit_option_menu==0.3.2
-tensorflow==2.9.0
 scikit-learn==1.0.2
 ipython
 pythreejs
