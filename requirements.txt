@@ -1,5 +1,5 @@
 altair==4.1.0
-tensorflow==2.9.0
+tensorflow==2.8
 protobuf~=3.19.0
 joblib==1.1.1
 matplotlib==3.6.3
