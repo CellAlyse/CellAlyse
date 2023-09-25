@@ -60,6 +60,7 @@ with st.sidebar:
             "nav-link": {"font-size": "20px", "color": "#ffffff"},
         },
     )
+PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python 
 
 if selected == "Typisierung":
     cbc()
